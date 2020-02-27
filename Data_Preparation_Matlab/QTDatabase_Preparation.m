@@ -7,7 +7,7 @@
 % It was selected the 1st channel of the ECG signals and the sample rate
 % was changed to 360Hz.
 
-% Author: MSc Eng. David Castro Piñol
+% Author: MSc Eng. David Castro PiÃ±ol
 clear; close all; clc;
 
 %% Installing the Physionet Toolbox
