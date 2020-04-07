@@ -216,16 +216,16 @@ if __name__ == "__main__":
     #     with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
     #         pickle.dump(test_results, output)
     #     print('Results from experiment ' + str(experiment) + ' saved')
-
-
-    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
-
-    test_results_FIR = [X_test_f, y_test_f, y_filter]
-
-    # SAve FIR filter results
-    with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-        pickle.dump(test_results_FIR, output)
-    print('Results from experiment FIR filter saved')
+    #
+    #
+    # [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+    #
+    # test_results_FIR = [X_test_f, y_test_f, y_filter]
+    #
+    # # Save FIR filter results
+    # with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+    #     pickle.dump(test_results_FIR, output)
+    # print('Results from experiment FIR filter saved')
 
 
 
