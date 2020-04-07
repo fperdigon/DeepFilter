@@ -196,7 +196,7 @@ if __name__ == "__main__":
 
     import _pickle as pickle
 
-    #Dataset = Data_Preparation()
+    Dataset = Data_Preparation()
 
     # dl_experiments = ['Vanilla Linear',
     #                   'Vanilla Non Linear',
