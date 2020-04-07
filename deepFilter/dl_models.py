@@ -221,7 +221,7 @@ def deep_filter_vanilla_linear():
     return model
 
 
-def deep_filter_vanilla_relu():
+def deep_filter_vanilla_Nlinear():
     model = Sequential()
 
     model.add(Conv1D(filters=64,
@@ -287,6 +287,8 @@ def deep_filter_I_linear():
 
     model = Model(inputs=[input], outputs=predictions)
 
+    return model
+
 
 def deep_filter_I_Nlinear():
     input_shape = (512, 1)
@@ -305,6 +307,8 @@ def deep_filter_I_Nlinear():
                          padding='same')(tensor)
 
     model = Model(inputs=[input], outputs=predictions)
+
+    return model
 
 def deep_filter_I_LANL():
     # TODO: Make the doc
