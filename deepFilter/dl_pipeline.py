@@ -15,7 +15,7 @@ from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping, T
 from keras import losses
 from sklearn.model_selection import train_test_split
 
-from deepFilter.dl_models import deep_filter_model_v4
+import deepFilter.dl_models as models
 
 
 # Custom loss SSD
@@ -36,22 +36,49 @@ def mad_loss(y_true, y_pred):
     return K.max(K.square(y_pred - y_true), axis=-2)
 
 
-def train_dl(Dataset):
+def train_dl(Dataset, experiment):
 
-    print('Deep Learning pipeline: Training the model')
+    print('Deep Learning pipeline: Training the model for exp ' + str(experiment))
 
     [X_train, y_train, X_test, y_test] = Dataset
 
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.3, shuffle=True)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.3, shuffle=True, random_state=1)
 
     # ==================
     # LOAD THE DL MODEL
     # ==================
 
-    # model = deep_filter_model()
-    # model = deep_filter_model_v2()
-    # model = deep_filter_model_v3()
-    model = deep_filter_model_v4()
+
+    if experiment == 1:
+        # Vanilla CNN linear
+        model = models.deep_filter_vanilla_linear()
+        model_label = 'vanilla_linear'
+
+    if experiment == 2:
+        # Vanilla CNN non linear
+        model = models.deep_filter_vanilla_Nlinear()
+        model_label = 'vanilla_nonlinear'
+
+    if experiment == 3:
+        # Vanilla Inception-like linear
+        model = models.deep_filter_I_linear()
+        model_label = 'I_like_linear'
+
+    if experiment == 4:
+        # Vanilla Inception-like non linear
+        model = models.deep_filter_I_Nlinear()
+        model_label = 'I_like_Nlinear'
+
+    if experiment == 5:
+        # Vanilla Inception-like linear and non linear
+        model = models.deep_filter_I_LANL()
+        model_label = 'I_like_LANL'
+
+    if experiment == 6:
+        # Vanilla Inception-like linear and non linear dilated
+        model = models.deep_filter_model_I_LANL_dilated()
+        model_label = 'I_like_LANL_dilated'
+
 
     model.summary()
 
@@ -71,7 +98,7 @@ def train_dl(Dataset):
     # Keras Callbacks
 
     # checkpoint
-    model_filepath = "model_v4_loss_v2_weights.best.hdf5"
+    model_filepath = model_label + '_weights.best.hdf5'
 
     checkpoint = ModelCheckpoint(model_filepath,
                                  monitor='ssd_loss',
@@ -94,7 +121,7 @@ def train_dl(Dataset):
                                patience=10,
                                verbose=1)
 
-    tb_log_dir = './runs/Model_V4_loss_v2'
+    tb_log_dir = './runs/' + model_label
     # if os.path.isdir(tb_log_dir): # remove the old TB dir
     #     shutil.rmtree(tb_log_dir, ignore_errors=True)
 
@@ -121,7 +148,7 @@ def train_dl(Dataset):
 
 
 
-def test_dl(Dataset):
+def test_dl(Dataset, experiment):
 
     print('Deep Learning pipeline: Testing the model')
 
@@ -133,17 +160,42 @@ def test_dl(Dataset):
     # LOAD THE DL MODEL
     # ==================
 
-    # model = deep_filter_model()
-    # model = deep_filter_model_v2()
-    # model = deep_filter_model_v3()
-    model = deep_filter_model_v4()
+    if experiment == 1:
+        # Vanilla CNN linear
+        model = models.deep_filter_vanilla_linear()
+        model_label = 'vanilla_linear'
+
+    if experiment == 2:
+        # Vanilla CNN non linear
+        model = models.deep_filter_vanilla_Nlinear()
+        model_label = 'vanilla_nonlinear'
+
+    if experiment == 3:
+        # Vanilla Inception-like linear
+        model = models.deep_filter_I_linear()
+        model_label = 'I_like_linear'
+
+    if experiment == 4:
+        # Vanilla Inception-like non linear
+        model = models.deep_filter_I_Nlinear()
+        model_label = 'I_like_Nlinear'
+
+    if experiment == 5:
+        # Vanilla Inception-like linear and non linear
+        model = models.deep_filter_I_LANL()
+        model_label = 'I_like_LANL'
+
+    if experiment == 6:
+        # Vanilla Inception-like linear and non linear dilated
+        model = models.deep_filter_model_I_LANL_dilated()
+        model_label = 'I_like_LANL_dilated'
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                   optimizer=keras.optimizers.Adam(lr=0.1),
                   metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss])
 
     # checkpoint
-    model_filepath = "model_v4_loss_v2_weights.best.hdf5"
+    model_filepath = model_label + '_weights.best.hdf5'
     # load weights
     model.load_weights(model_filepath)
 

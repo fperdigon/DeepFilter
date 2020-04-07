@@ -221,7 +221,7 @@ def deep_filter_vanilla_linear():
     return model
 
 
-def deep_filter_vanilla_relu():
+def deep_filter_vanilla_Nlinear():
     model = Sequential()
 
     model.add(Conv1D(filters=64,
