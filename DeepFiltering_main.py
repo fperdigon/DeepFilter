@@ -13,14 +13,15 @@
 
 import scipy.io as sio
 import numpy as np
-import matplotlib.pyplot as plt
 
+import _pickle as pickle
 
 from utils.metrics import MAD, SSD, PRD
+from utils import visualization as vs
+
 from digitalFilters.dfilters import FIR_test_Dataset
 from deepFilter.dl_pipeline import train_dl, test_dl
 
-import _pickle as pickle
 
 def Data_Preparation():
 
@@ -190,44 +191,52 @@ def Data_Preparation():
     return Dataset
 
 
+
 if __name__ == "__main__":
 
     import _pickle as pickle
 
-    Dataset = Data_Preparation()
+    #Dataset = Data_Preparation()
 
-    dl_experiments = ['Vanilla Linear',
-                      'Vanilla Non Linear',
-                      'Inception-like Linear',
-                      'Inception-like Non Linear',
-                      'Inception-like Linear and Non Linear',
-                      'Inception-like Linear and Non Linear Dilated'
+    # dl_experiments = ['Vanilla Linear',
+    #                   'Vanilla Non Linear',
+    #                   'Inception-like Linear',
+    #                   'Inception-like Non Linear',
+    #                   'Inception-like Linear and Non Linear',
+    #                   'Inception-like Linear and Non Linear Dilated'
+    #                   ]
+
+    dl_experiments = ['Vanilla L',
+                      'Vanilla NL',
+                      'Inception-like L',
+                      'Inception-like NL',
+                      'Inception-like LANL',
+                      'Inception-like LANLD'
                       ]
 
-    # for experiment in range(len(dl_experiments)):
-    #
-    #     train_dl(Dataset, experiment)
-    #
-    #     [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
-    #
-    #     test_results = [X_test, y_test, y_pred]
-    #
-    #     # Save Results
-    #     with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
-    #         pickle.dump(test_results, output)
-    #     print('Results from experiment ' + str(experiment) + ' saved')
-    #
-    #
-    # [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
-    #
-    # test_results_FIR = [X_test_f, y_test_f, y_filter]
-    #
-    # # Save FIR filter results
-    # with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-    #     pickle.dump(test_results_FIR, output)
-    # print('Results from experiment FIR filter saved')
+
+    for experiment in range(len(dl_experiments)):
+
+        train_dl(Dataset, experiment)
+
+        [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
+
+        test_results = [X_test, y_test, y_pred]
+
+        # Save Results
+        with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(test_results, output)
+        print('Results from experiment ' + str(experiment) + ' saved')
 
 
+    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+
+    test_results_FIR = [X_test_f, y_test_f, y_filter]
+
+    # Save FIR filter results
+    with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_FIR, output)
+    print('Results from experiment FIR filter saved')
 
 
     # Load Results Exp 0
@@ -333,26 +342,59 @@ if __name__ == "__main__":
     # FIR Filtering Metrics
     [X_test, y_test, y_filter] = test_exp_FIR
 
-    SSD_values_F = SSD(y_test, y_filter)
+    SSD_values_FIR = SSD(y_test, y_filter)
 
-    MAD_values_F = MAD(y_test, y_filter)
+    MAD_values_FIR = MAD(y_test, y_filter)
 
-    PRD_values_F = PRD(y_test, y_filter)
-
-
+    PRD_values_FIR = PRD(y_test, y_filter)
 
 
 
+    # Results Visualization
 
-    #
-    #
-    # for i in range(len(y_test)):
-    #
-    #     plt.figure()
-    #     plt.plot(y_test[i], 'g')
-    #     plt.plot(y_pred[i], 'b')
-    #     plt.plot(X_test[i], 'k')
-    #     plt.plot(y_test[i] - y_pred[i], 'r')
-    #     plt.show()
-    #
-    #     print(' ')
+    SSD_all = [SSD_values_DL_exp_0,
+               SSD_values_DL_exp_1,
+               SSD_values_DL_exp_2,
+               SSD_values_DL_exp_3,
+               SSD_values_DL_exp_4,
+               SSD_values_DL_exp_5,
+               SSD_values_FIR
+               ]
+
+    MAD_all = [MAD_values_DL_exp_0,
+               MAD_values_DL_exp_1,
+               MAD_values_DL_exp_2,
+               MAD_values_DL_exp_3,
+               MAD_values_DL_exp_4,
+               MAD_values_DL_exp_5,
+               MAD_values_FIR
+               ]
+
+    PRD_all = [PRD_values_DL_exp_0,
+               PRD_values_DL_exp_1,
+               PRD_values_DL_exp_2,
+               PRD_values_DL_exp_3,
+               PRD_values_DL_exp_4,
+               PRD_values_DL_exp_5,
+               PRD_values_FIR]
+
+
+
+    Exp_all = dl_experiments + ['FIR Filter']
+
+    #generate_violinplots(SSD_all, Exp_all, 'SSD (au)', log=False)
+    #generate_barplot(SSD_all, Exp_all, 'SSD (au)', log=False)
+    #generate_boxplot(SSD_all, Exp_all, 'SSD (au)', log=True)
+    vs.generate_hboxplot(SSD_all, Exp_all, 'SSD (au)', log=False, set_x_axis_size=(0,41))
+
+    #generate_violinplots(MAD_all, Exp_all, 'MAD (au)', log=False)
+    #generate_barplot(MAD_all, Exp_all, 'MAD (au)', log=False)
+    #generate_boxplot(MAD_all, Exp_all, 'MAD (au)', log=True)
+    vs.generate_hboxplot(MAD_all, Exp_all, 'MAD (au)', log=False)
+
+    #generate_violinplots(PRD_all, Exp_all, 'PRD (au)', log=False)
+    #generate_barplot(PRD_all, Exp_all, 'PRD (au)', log=False)
+    #generate_boxplot(PRD_all, Exp_all, 'PRD (au)', log=True)
+    vs.generate_hboxplot(PRD_all, Exp_all, 'PRD (au)', log=False)
+
+
