@@ -204,74 +204,146 @@ if __name__ == "__main__":
                       'Inception-like Linear and Non Linear Dilated'
                       ]
 
-    for experiment in range(2,6):
-
-        train_dl(Dataset, experiment)
-
-        [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
-
-        test_results = [X_test, y_test, y_pred]
-
-        # Save Results
-        with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results, output)
-        print('Results from experiment ' + str(experiment) + ' saved')
-
-
+    # for experiment in range(len(dl_experiments)):
+    #
+    #     train_dl(Dataset, experiment)
+    #
+    #     [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
+    #
+    #     test_results = [X_test, y_test, y_pred]
+    #
+    #     # Save Results
+    #     with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
+    #         pickle.dump(test_results, output)
+    #     print('Results from experiment ' + str(experiment) + ' saved')
 
 
+    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
 
-    # [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
-    #
-    # # Pickle the values
-    #
-    #
-    # # with open('results.pkl', 'wb') as output:  # Overwrites any existing file.
-    # #     pickle.dump([y_test, y_pred], output)
-    #
-    # # DL Metrics
-    #
-    # SSD_values_DL = SSD(y_test, y_pred)
-    #
-    # MAD_values_DL = MAD(y_test, y_pred)
-    #
-    # PRD_values_DL = PRD(y_test, y_pred)
-    #
-    #
-    # SSD_mean_DL = np.mean(SSD_values_DL)
-    #
-    # MAD_mean_DL = np.mean(MAD_values_DL)
-    #
-    # PRD_mean_DL = np.mean(PRD_values_DL)
-    #
-    #
-    # SSD_std_DL = np.std(SSD_values_DL)
-    #
-    # MAD_std_DL = np.std(MAD_values_DL)
-    #
-    # PRD_std_DL = np.std(PRD_values_DL)
-    #
-    #
-    # # Filtering Metrics
-    # SSD_values_F = SSD(y_test, y_filter)
-    #
-    # MAD_values_F = MAD(y_test, y_filter)
-    #
-    # PRD_values_F = PRD(y_test, y_filter)
-    #
-    #
-    # SSD_mean_F = np.mean(SSD_values_F)
-    #
-    # MAD_mean_F = np.mean(MAD_values_F)
-    #
-    # PRD_mean_F = np.mean(PRD_values_F)
-    #
-    #
-    # SSD_std_F = np.std(SSD_values_F)
-    #
-    # MAD_std_F = np.std(MAD_values_F)
-    #
-    # PRD_std_F = np.std(PRD_values_F)
+    test_results_FIR = [X_test_f, y_test_f, y_filter]
+
+    # SAve FIR filter results
+    with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_FIR, output)
+    print('Results from experiment FIR filter saved')
+
+
+
+
+    # Load Results Exp 0
+    with open('test_results_exp_0.pkl', 'rb') as input:
+        test_exp_0 = pickle.load(input)
+
+    # Load Results Exp 1
+    with open('test_results_exp_1.pkl', 'rb') as input:
+        test_exp_1 = pickle.load(input)
+
+    # Load Results Exp 2
+    with open('test_results_exp_2.pkl', 'rb') as input:
+        test_exp_2 = pickle.load(input)
+
+    # Load Results Exp 3
+    with open('test_results_exp_3.pkl', 'rb') as input:
+        test_exp_3 = pickle.load(input)
+
+    # Load Results Exp 4
+    with open('test_results_exp_4.pkl', 'rb') as input:
+        test_exp_4 = pickle.load(input)
+
+    # Load Results Exp 5
+    with open('test_results_exp_5.pkl', 'rb') as input:
+        test_exp_5 = pickle.load(input)
+
+
+    # Load Result FIR Filter
+    with open('test_results_exp_FIR.pkl', 'rb') as input:
+        test_exp_FIR = pickle.load(input)
+
+
+
+    # DL Metrics
+
+    # Exp 0
+
+    [X_test, y_test, y_pred] = test_exp_0
+
+    SSD_values_DL_exp_0 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_0 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_0 = PRD(y_test, y_pred)
+
+
+    # Exp 1
+
+    [X_test, y_test, y_pred] = test_exp_1
+
+    SSD_values_DL_exp_1 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_1 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_1 = PRD(y_test, y_pred)
+
+
+    # Exp 2
+
+    [X_test, y_test, y_pred] = test_exp_2
+
+    SSD_values_DL_exp_2 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_2 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_2 = PRD(y_test, y_pred)
+
+
+    # Exp 3
+
+    [X_test, y_test, y_pred] = test_exp_3
+
+    SSD_values_DL_exp_3 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_3 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_3 = PRD(y_test, y_pred)
+
+
+    # Exp 4
+
+    [X_test, y_test, y_pred] = test_exp_4
+
+    SSD_values_DL_exp_4 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_4 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_4 = PRD(y_test, y_pred)
+
+
+    # Exp 5
+
+    [X_test, y_test, y_pred] = test_exp_5
+
+    SSD_values_DL_exp_5 = SSD(y_test, y_pred)
+
+    MAD_values_DL_exp_5 = MAD(y_test, y_pred)
+
+    PRD_values_DL_exp_5 = PRD(y_test, y_pred)
+
+
+    # Digital Filtering
+    # FIR Filtering Metrics
+    [X_test, y_test, y_filter] = test_exp_FIR
+
+    SSD_values_F = SSD(y_test, y_filter)
+
+    MAD_values_F = MAD(y_test, y_filter)
+
+    PRD_values_F = PRD(y_test, y_filter)
+
+
+
+
+
+
     #
     #
     # for i in range(len(y_test)):
