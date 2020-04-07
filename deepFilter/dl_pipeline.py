@@ -49,36 +49,38 @@ def train_dl(Dataset, experiment):
     # ==================
 
 
-    if experiment == 1:
+    if experiment == 0:
         # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
         model_label = 'vanilla_linear'
 
-    if experiment == 2:
+    if experiment == 1:
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'vanilla_nonlinear'
 
-    if experiment == 3:
-        # Vanilla Inception-like linear
+    if experiment == 2:
+        # Inception-like linear
         model = models.deep_filter_I_linear()
         model_label = 'I_like_linear'
 
-    if experiment == 4:
-        # Vanilla Inception-like non linear
+    if experiment == 3:
+        # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
         model_label = 'I_like_Nlinear'
 
-    if experiment == 5:
-        # Vanilla Inception-like linear and non linear
+    if experiment == 4:
+        # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
         model_label = 'I_like_LANL'
 
-    if experiment == 6:
-        # Vanilla Inception-like linear and non linear dilated
+    if experiment == 5:
+        # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
         model_label = 'I_like_LANL_dilated'
 
+
+    print('\n ' + model_label + '\n ')
 
     model.summary()
 
@@ -160,33 +162,33 @@ def test_dl(Dataset, experiment):
     # LOAD THE DL MODEL
     # ==================
 
-    if experiment == 1:
+    if experiment == 0:
         # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
         model_label = 'vanilla_linear'
 
-    if experiment == 2:
+    if experiment == 1:
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'vanilla_nonlinear'
 
-    if experiment == 3:
-        # Vanilla Inception-like linear
+    if experiment == 2:
+        # Inception-like linear
         model = models.deep_filter_I_linear()
         model_label = 'I_like_linear'
 
-    if experiment == 4:
-        # Vanilla Inception-like non linear
+    if experiment == 3:
+        # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
         model_label = 'I_like_Nlinear'
 
-    if experiment == 5:
-        # Vanilla Inception-like linear and non linear
+    if experiment == 4:
+        # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
         model_label = 'I_like_LANL'
 
-    if experiment == 6:
-        # Vanilla Inception-like linear and non linear dilated
+    if experiment == 5:
+        # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
         model_label = 'I_like_LANL_dilated'
 

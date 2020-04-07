@@ -20,6 +20,8 @@ from utils.metrics import MAD, SSD, PRD
 from digitalFilters.dfilters import FIR_test_Dataset
 from deepFilter.dl_pipeline import train_dl, test_dl
 
+import _pickle as pickle
+
 def Data_Preparation():
 
     print('Getting the Data ready ... ')
@@ -194,70 +196,91 @@ if __name__ == "__main__":
 
     Dataset = Data_Preparation()
 
-    train_dl(Dataset)
+    dl_experiments = ['Vanilla Linear',
+                      'Vanilla Non Linear',
+                      'Inception-like Linear',
+                      'Inception-like Non Linear',
+                      'Inception-like Linear and Non Linear',
+                      'Inception-like Linear and Non Linear Dilated'
+                      ]
 
-    [X_test, y_test, y_pred] = test_dl(Dataset)
+    for experiment in range(2,6):
 
-    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+        train_dl(Dataset, experiment)
 
-    # Pickle the values
+        [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
 
+        test_results = [X_test, y_test, y_pred]
 
-    # with open('results.pkl', 'wb') as output:  # Overwrites any existing file.
-    #     pickle.dump([y_test, y_pred], output)
-
-    # DL Metrics
-
-    SSD_values_DL = SSD(y_test, y_pred)
-
-    MAD_values_DL = MAD(y_test, y_pred)
-
-    PRD_values_DL = PRD(y_test, y_pred)
-
-
-    SSD_mean_DL = np.mean(SSD_values_DL)
-
-    MAD_mean_DL = np.mean(MAD_values_DL)
-
-    PRD_mean_DL = np.mean(PRD_values_DL)
+        # Save Results
+        with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(test_results, output)
+        print('Results from experiment ' + str(experiment) + ' saved')
 
 
-    SSD_std_DL = np.std(SSD_values_DL)
-
-    MAD_std_DL = np.std(MAD_values_DL)
-
-    PRD_std_DL = np.std(PRD_values_DL)
 
 
-    # Filtering Metrics
-    SSD_values_F = SSD(y_test, y_filter)
 
-    MAD_values_F = MAD(y_test, y_filter)
-
-    PRD_values_F = PRD(y_test, y_filter)
-
-
-    SSD_mean_F = np.mean(SSD_values_F)
-
-    MAD_mean_F = np.mean(MAD_values_F)
-
-    PRD_mean_F = np.mean(PRD_values_F)
-
-
-    SSD_std_F = np.std(SSD_values_F)
-
-    MAD_std_F = np.std(MAD_values_F)
-
-    PRD_std_F = np.std(PRD_values_F)
-
-
-    for i in range(len(y_test)):
-
-        plt.figure()
-        plt.plot(y_test[i], 'g')
-        plt.plot(y_pred[i], 'b')
-        plt.plot(X_test[i], 'k')
-        plt.plot(y_test[i] - y_pred[i], 'r')
-        plt.show()
-
-        print(' ')
+    # [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+    #
+    # # Pickle the values
+    #
+    #
+    # # with open('results.pkl', 'wb') as output:  # Overwrites any existing file.
+    # #     pickle.dump([y_test, y_pred], output)
+    #
+    # # DL Metrics
+    #
+    # SSD_values_DL = SSD(y_test, y_pred)
+    #
+    # MAD_values_DL = MAD(y_test, y_pred)
+    #
+    # PRD_values_DL = PRD(y_test, y_pred)
+    #
+    #
+    # SSD_mean_DL = np.mean(SSD_values_DL)
+    #
+    # MAD_mean_DL = np.mean(MAD_values_DL)
+    #
+    # PRD_mean_DL = np.mean(PRD_values_DL)
+    #
+    #
+    # SSD_std_DL = np.std(SSD_values_DL)
+    #
+    # MAD_std_DL = np.std(MAD_values_DL)
+    #
+    # PRD_std_DL = np.std(PRD_values_DL)
+    #
+    #
+    # # Filtering Metrics
+    # SSD_values_F = SSD(y_test, y_filter)
+    #
+    # MAD_values_F = MAD(y_test, y_filter)
+    #
+    # PRD_values_F = PRD(y_test, y_filter)
+    #
+    #
+    # SSD_mean_F = np.mean(SSD_values_F)
+    #
+    # MAD_mean_F = np.mean(MAD_values_F)
+    #
+    # PRD_mean_F = np.mean(PRD_values_F)
+    #
+    #
+    # SSD_std_F = np.std(SSD_values_F)
+    #
+    # MAD_std_F = np.std(MAD_values_F)
+    #
+    # PRD_std_F = np.std(PRD_values_F)
+    #
+    #
+    # for i in range(len(y_test)):
+    #
+    #     plt.figure()
+    #     plt.plot(y_test[i], 'g')
+    #     plt.plot(y_pred[i], 'b')
+    #     plt.plot(X_test[i], 'k')
+    #     plt.plot(y_test[i] - y_pred[i], 'r')
+    #     plt.show()
+    #
+    #     print(' ')
