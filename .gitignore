@@ -3,8 +3,11 @@
 /TBoard_Graph/*
 /.idea/*
 /run*/*
+deepFilter/__pycache__/*
+utils/__pycache__/*
 
 # Files to ignore
+*.pyc
 *.png
 *.npy
 *.hdf5
