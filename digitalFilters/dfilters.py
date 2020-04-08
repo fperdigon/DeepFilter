@@ -11,7 +11,7 @@
 import scipy.io as sio
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import kaiserord, firwin, filtfilt
+from scipy.signal import kaiserord, firwin, filtfilt, butter
 
 
 
@@ -49,14 +49,48 @@ def FIRRemoveBL(ecgy, Fs, Fc, factor):
         diff = N*3 - signal_len
         #ecgy.extend(list(reversed(ecgy)))
         #ecgy.extend(list(ecgy[-1]*ones(diff)))
-
         ecgy = list(reversed(ecgy)) + ecgy + list(ecgy[-1] * np.ones(diff))
-    
-    # Filtering with filtfilt
-    ECG_Clean = filtfilt(h, 1.0, ecgy)
-    ECG_Clean = ECG_Clean[signal_len: signal_len + signal_len]
         
+        # Ftering with filtfilt
+        ECG_Clean = filtfilt(h, 1.0, ecgy)
+        ECG_Clean = ECG_Clean[signal_len: signal_len + signal_len]
+    else:
+        ECG_Clean = filtfilt(h, 1.0, ecgy)
+    
     return ECG_Clean, N
+
+def IIRRemoveBL(ecgy,Fs, Fc):
+    
+    #    ecgy:        the contamined signal (must be a list)
+    #    Fc:          cut-off frequency
+    #    Fs:          sample frequiency
+    #    ECG_Clean :  processed signal without BLW
+    
+    # getting the length of the signal
+    signal_len = len(ecgy)
+    
+    # fixed order
+    N = 4
+    
+    # Normalized Cutt of frequency
+    Wn = Fc/(Fs/2)    
+    
+    # IIR butterworth coefficients
+    b, a = butter(N, Wn, 'highpass', analog=False)
+    
+    # Check filtfilt condition
+    if N*3 > signal_len:
+        diff = N*3 - signal_len
+        ecgy = list(reversed(ecgy)) + ecgy + list(ecgy[-1] * np.ones(diff))
+        
+        # Filtering with filtfilt
+        ECG_Clean = filtfilt(b, a, ecgy)
+        ECG_Clean = ECG_Clean[signal_len: signal_len + signal_len]
+        
+    else:
+        ECG_Clean = filtfilt(b, a, ecgy)
+                   
+    return ECG_Clean   
 
 
 def FIR_test_Dataset(Dataset):
@@ -85,23 +119,26 @@ def FIR_test_Dataset(Dataset):
     return [X_test, y_test, y_filter_out]
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     # signal for demonstration.
-    ecgy = sio.loadmat('ecgbeat.mat')
-    signal = ecgy['ecgy']
-    signal = list(signal[:,0])
+ecgy = sio.loadmat('ecgbeat.mat')
+signal = ecgy['ecgy']
+signal = list(signal[:,0])
 
-    ## parameters
-    Fs = 360
-    Fc = 0.67
+## parameters
+Fs = 360
+Fc = 0.67
+factor = 2
 
-    ECG_Clean,N = FIRRemoveBL(signal,Fs,Fc)
+#ECG_Clean,N = FIRRemoveBL(signal,Fs,Fc,factor)
 
-    plt.figure()
-    plt.plot(signal[0:len(ecgy['ecgy'])])
-    plt.plot(ECG_Clean)
-    plt.show()
-    plt.figure()
+ECG_Clean = IIRRemoveBL(signal,Fs, Fc)
+
+plt.figure()
+plt.plot(signal[0:len(ecgy['ecgy'])])
+plt.plot(ECG_Clean)
+plt.show()
+plt.figure()
 
 
 
