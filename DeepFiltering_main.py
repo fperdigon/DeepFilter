@@ -17,12 +17,10 @@ from utils.metrics import MAD, SSD, PRD
 from utils import visualization as vs
 from utils import data_preparation as dp
 
-from digitalFilters.dfilters import FIR_test_Dataset
+from digitalFilters.dfilters import FIR_test_Dataset, IIR_test_Dataset
 from deepFilter.dl_pipeline import train_dl, test_dl
 
 if __name__ == "__main__":
-
-    Dataset = dp.Data_Preparation()
 
     # dl_experiments = ['Vanilla Linear',
     #                   'Vanilla Non Linear',
@@ -40,6 +38,7 @@ if __name__ == "__main__":
                       'Inception-like LANLD'
                       ]
 
+    Dataset = dp.Data_Preparation()
 
     for experiment in range(len(dl_experiments)):
 
@@ -64,6 +63,17 @@ if __name__ == "__main__":
         pickle.dump(test_results_FIR, output)
     print('Results from experiment FIR filter saved')
 
+    [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
+
+    test_results_IIR = [X_test_f, y_test_f, y_filter]
+
+    # Save FIR filter results
+    with open('test_results_exp_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_IIR, output)
+    print('Results from experiment IIR filter saved')
+
+
+    ####### LOAD EXPERIMENTS #######
 
     # Load Results Exp 0
     with open('test_results_exp_0.pkl', 'rb') as input:
@@ -94,6 +104,12 @@ if __name__ == "__main__":
     with open('test_results_exp_FIR.pkl', 'rb') as input:
         test_exp_FIR = pickle.load(input)
 
+    # Load Result IIR Filter
+    with open('test_results_exp_IIR.pkl', 'rb') as input:
+        test_exp_IIR = pickle.load(input)
+
+
+    ####### Calculate Metrics #######
 
 
     # DL Metrics
@@ -165,6 +181,7 @@ if __name__ == "__main__":
 
 
     # Digital Filtering
+
     # FIR Filtering Metrics
     [X_test, y_test, y_filter] = test_exp_FIR
 
@@ -175,8 +192,19 @@ if __name__ == "__main__":
     PRD_values_FIR = PRD(y_test, y_filter)
 
 
+    # IIR Filtering Metrics
+    [X_test, y_test, y_filter] = test_exp_IIR
 
-    # Results Visualization
+    SSD_values_IIR = SSD(y_test, y_filter)
+
+    MAD_values_IIR = MAD(y_test, y_filter)
+
+    PRD_values_IIR = PRD(y_test, y_filter)
+
+
+
+
+    ####### Results Visualization #######
 
     SSD_all = [SSD_values_DL_exp_0,
                SSD_values_DL_exp_1,
@@ -184,7 +212,8 @@ if __name__ == "__main__":
                SSD_values_DL_exp_3,
                SSD_values_DL_exp_4,
                SSD_values_DL_exp_5,
-               SSD_values_FIR
+               SSD_values_FIR,
+               SSD_values_IIR
                ]
 
     MAD_all = [MAD_values_DL_exp_0,
@@ -193,7 +222,8 @@ if __name__ == "__main__":
                MAD_values_DL_exp_3,
                MAD_values_DL_exp_4,
                MAD_values_DL_exp_5,
-               MAD_values_FIR
+               MAD_values_FIR,
+               MAD_values_IIR
                ]
 
     PRD_all = [PRD_values_DL_exp_0,
@@ -202,16 +232,18 @@ if __name__ == "__main__":
                PRD_values_DL_exp_3,
                PRD_values_DL_exp_4,
                PRD_values_DL_exp_5,
-               PRD_values_FIR]
+               PRD_values_FIR,
+               PRD_values_IIR
+               ]
 
 
 
-    Exp_all = dl_experiments + ['FIR Filter']
+    Exp_all = dl_experiments + ['FIR Filter', 'IIR Filter']
 
     #generate_violinplots(SSD_all, Exp_all, 'SSD (au)', log=False)
     #generate_barplot(SSD_all, Exp_all, 'SSD (au)', log=False)
     #generate_boxplot(SSD_all, Exp_all, 'SSD (au)', log=True)
-    vs.generate_hboxplot(SSD_all, Exp_all, 'SSD (au)', log=False, set_x_axis_size=(0,41))
+    vs.generate_hboxplot(SSD_all, Exp_all, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
 
     #generate_violinplots(MAD_all, Exp_all, 'MAD (au)', log=False)
     #generate_barplot(MAD_all, Exp_all, 'MAD (au)', log=False)

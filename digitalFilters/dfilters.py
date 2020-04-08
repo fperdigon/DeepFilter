@@ -106,10 +106,9 @@ def FIR_test_Dataset(Dataset):
 
     for signal in X_test:
         current_signal += 1
-        print('Filtering signal ' + str(current_signal) + ' of ' + str(len(X_test)))
+        print('(FIR) Filtering signal ' + str(current_signal) + ' of ' + str(len(X_test)))
         s = np.squeeze(signal, axis=1).tolist()
 
-        # temp_signal, N = Filtering.FIRRemoveBL(s, Fs, Fc, 7)
         temp_signal, N = FIRRemoveBL(s, Fs, Fc, 4.5)
 
         y_filter_out.append(temp_signal)
@@ -119,26 +118,51 @@ def FIR_test_Dataset(Dataset):
     return [X_test, y_test, y_filter_out]
 
 
-#if __name__ == "__main__":
+def IIR_test_Dataset(Dataset):
+    [train_set, train_set_GT, X_test, y_test] = Dataset
+
+    ## parameters
+    Fs = 360
+    Fc = 0.67
+
+    y_filter_out = []
+
+    current_signal = 0
+
+    for signal in X_test:
+        current_signal += 1
+        print('(IIR) Filtering signal ' + str(current_signal) + ' of ' + str(len(X_test)))
+        s = np.squeeze(signal, axis=1).tolist()
+
+        temp_signal = IIRRemoveBL(s, Fs, Fc)
+
+        y_filter_out.append(temp_signal)
+
+    y_filter_out = np.expand_dims(np.array(y_filter_out), axis=2)
+
+    return [X_test, y_test, y_filter_out]
+
+
+if __name__ == "__main__":
     # signal for demonstration.
-ecgy = sio.loadmat('ecgbeat.mat')
-signal = ecgy['ecgy']
-signal = list(signal[:,0])
+    ecgy = sio.loadmat('ecgbeat.mat')
+    signal = ecgy['ecgy']
+    signal = list(signal[:,0])
 
-## parameters
-Fs = 360
-Fc = 0.67
-factor = 2
+    ## parameters
+    Fs = 360
+    Fc = 0.67
+    factor = 2
 
-#ECG_Clean,N = FIRRemoveBL(signal,Fs,Fc,factor)
+    #ECG_Clean,N = FIRRemoveBL(signal,Fs,Fc,factor)
 
-ECG_Clean = IIRRemoveBL(signal,Fs, Fc)
+    ECG_Clean = IIRRemoveBL(signal,Fs, Fc)
 
-plt.figure()
-plt.plot(signal[0:len(ecgy['ecgy'])])
-plt.plot(ECG_Clean)
-plt.show()
-plt.figure()
+    plt.figure()
+    plt.plot(signal[0:len(ecgy['ecgy'])])
+    plt.plot(ECG_Clean)
+    plt.show()
+    plt.figure()
 
 
 
