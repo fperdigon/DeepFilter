@@ -149,3 +149,22 @@ def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
         plt.title('ECG signal for comparison')
 
 
+def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
+
+    fig, ax = plt.subplots()
+    plt.plot(ecg, 'g', label='ECG orig')
+    plt.plot(ecg_dl, 'b', label='ECG DL Filtered')
+    plt.plot(ecg_f, 'r', label='ECG IIR Filtered')
+    plt.plot(ecg - ecg_dl, color='#0089ff', label='Difference ECG - DL Filter')
+    plt.plot(ecg - ecg_f, color='#0089ff', label='Difference ECG - IIR Filter')
+    plt.grid(True)
+
+    plt.ylabel('au')
+    plt.xlabel('samples')
+
+    leg = ax.legend()
+
+    if signal_name != None and beat_no != None:
+        plt.title('Signal ' + str(signal_name) + 'beat ' + str(beat_no))
+    else:
+        plt.title('ECG signal for comparison')
