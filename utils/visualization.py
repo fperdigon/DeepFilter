@@ -172,3 +172,13 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
         plt.title('ECG signal for comparison')
 
     plt.show()
+
+
+def generate_table(np_data, description):
+    # Process the results and store in Panda objects
+    col = description
+    loss_val_np = np.rot90(np_data)
+
+    pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
+
+    pd_df.describe()
