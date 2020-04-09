@@ -10,6 +10,8 @@
 #===========================================================
 
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import jaccard_score
 
 def SSD(y, y_pred):
     return np.sum(np.square(y - y_pred), axis=1)  # axis 1 is the signal dimension
@@ -25,3 +27,20 @@ def PRD(y, y_pred):
     PRD = np.sqrt(N/D) * 100
 
     return PRD
+
+
+def COS_SIM(y, y_pred):
+
+    cos_sim = []
+
+    y = np.squeeze(y, axis=-1)
+    y_pred = np.squeeze(y_pred, axis=-1)
+
+    for idx in range(len(y)):
+        kl_temp = cosine_similarity(y[idx].reshape(1, -1), y_pred[idx].reshape(1, -1))
+        cos_sim.append(kl_temp)
+
+    cos_sim = np.array(cos_sim)
+    return cos_sim
+
+
