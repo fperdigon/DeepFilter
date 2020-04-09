@@ -174,11 +174,21 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
     plt.show()
 
 
-def generate_table(np_data, description):
+def generate_table(np_data, description, title=None):
     # Process the results and store in Panda objects
-    col = description
-    loss_val_np = np.rot90(np_data)
 
-    pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
+    print('\n')
+    print('###################################')
+    print('\n')
 
-    pd_df.describe()
+    if title != None:
+        print(title)
+    else:
+        print('Description Table')
+
+    print('\n')
+
+    for ind in range(len(description)):
+        print(description[ind])
+        print('Mean: ' + str(np.mean(np_data[ind])))
+        print('Std: ' + str(np.std(np_data[ind])))
