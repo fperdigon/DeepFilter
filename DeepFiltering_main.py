@@ -108,9 +108,14 @@ if __name__ == "__main__":
     with open('test_results_exp_IIR.pkl', 'rb') as input:
         test_exp_IIR = pickle.load(input)
 
-
     ####### Calculate Metrics #######
 
+    signals_id = [110, 210, 410, 810, 1610, 3210, 6410, 12810]
+
+    ecg_signals2plot = []
+    ecgbl_signals2plot = []
+    dl_signals2plot = []
+    fil_signals2plot = []
 
     # DL Metrics
 
@@ -124,7 +129,6 @@ if __name__ == "__main__":
 
     PRD_values_DL_exp_0 = PRD(y_test, y_pred)
 
-
     # Exp 1
 
     [X_test, y_test, y_pred] = test_exp_1
@@ -134,7 +138,6 @@ if __name__ == "__main__":
     MAD_values_DL_exp_1 = MAD(y_test, y_pred)
 
     PRD_values_DL_exp_1 = PRD(y_test, y_pred)
-
 
     # Exp 2
 
@@ -146,7 +149,6 @@ if __name__ == "__main__":
 
     PRD_values_DL_exp_2 = PRD(y_test, y_pred)
 
-
     # Exp 3
 
     [X_test, y_test, y_pred] = test_exp_3
@@ -156,7 +158,6 @@ if __name__ == "__main__":
     MAD_values_DL_exp_3 = MAD(y_test, y_pred)
 
     PRD_values_DL_exp_3 = PRD(y_test, y_pred)
-
 
     # Exp 4
 
@@ -168,8 +169,7 @@ if __name__ == "__main__":
 
     PRD_values_DL_exp_4 = PRD(y_test, y_pred)
 
-
-    # Exp 5
+    # Exp 5 (Best)
 
     [X_test, y_test, y_pred] = test_exp_5
 
@@ -179,6 +179,10 @@ if __name__ == "__main__":
 
     PRD_values_DL_exp_5 = PRD(y_test, y_pred)
 
+    for id in signals_id:
+        ecgbl_signals2plot.append(X_test[id])
+        ecg_signals2plot.append(y_test[id])
+        dl_signals2plot.append(y_pred[id])
 
     # Digital Filtering
 
@@ -191,8 +195,7 @@ if __name__ == "__main__":
 
     PRD_values_FIR = PRD(y_test, y_filter)
 
-
-    # IIR Filtering Metrics
+    # IIR Filtering Metrics (Best)
     [X_test, y_test, y_filter] = test_exp_IIR
 
     SSD_values_IIR = SSD(y_test, y_filter)
@@ -201,8 +204,8 @@ if __name__ == "__main__":
 
     PRD_values_IIR = PRD(y_test, y_filter)
 
-
-
+    for id in signals_id:
+        fil_signals2plot.append(y_filter[id])
 
     ####### Results Visualization #######
 
@@ -236,23 +239,39 @@ if __name__ == "__main__":
                PRD_values_IIR
                ]
 
-
-
     Exp_all = dl_experiments + ['FIR Filter', 'IIR Filter']
 
-    #generate_violinplots(SSD_all, Exp_all, 'SSD (au)', log=False)
-    #generate_barplot(SSD_all, Exp_all, 'SSD (au)', log=False)
-    #generate_boxplot(SSD_all, Exp_all, 'SSD (au)', log=True)
+    # generate_violinplots(SSD_all, Exp_all, 'SSD (au)', log=False)
+    # generate_barplot(SSD_all, Exp_all, 'SSD (au)', log=False)
+    # generate_boxplot(SSD_all, Exp_all, 'SSD (au)', log=True)
     vs.generate_hboxplot(SSD_all, Exp_all, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
 
-    #generate_violinplots(MAD_all, Exp_all, 'MAD (au)', log=False)
-    #generate_barplot(MAD_all, Exp_all, 'MAD (au)', log=False)
-    #generate_boxplot(MAD_all, Exp_all, 'MAD (au)', log=True)
+    # generate_violinplots(MAD_all, Exp_all, 'MAD (au)', log=False)
+    # generate_barplot(MAD_all, Exp_all, 'MAD (au)', log=False)
+    # generate_boxplot(MAD_all, Exp_all, 'MAD (au)', log=True)
     vs.generate_hboxplot(MAD_all, Exp_all, 'MAD (au)', log=False)
 
-    #generate_violinplots(PRD_all, Exp_all, 'PRD (au)', log=False)
-    #generate_barplot(PRD_all, Exp_all, 'PRD (au)', log=False)
-    #generate_boxplot(PRD_all, Exp_all, 'PRD (au)', log=True)
+    # generate_violinplots(PRD_all, Exp_all, 'PRD (au)', log=False)
+    # generate_barplot(PRD_all, Exp_all, 'PRD (au)', log=False)
+    # generate_boxplot(PRD_all, Exp_all, 'PRD (au)', log=True)
     vs.generate_hboxplot(PRD_all, Exp_all, 'PRD (au)', log=False)
+
+    for i in range(len(signals_id)):
+        vs.ecg_view(ecg=ecg_signals2plot[i],
+                    ecg_blw=ecgbl_signals2plot[i],
+                    ecg_dl=dl_signals2plot[i],
+                    ecg_f=fil_signals2plot[i],
+                    signal_name=None,
+                    beat_no=None)
+
+        vs.ecg_view_diff(ecg=ecg_signals2plot[i],
+                         ecg_blw=ecgbl_signals2plot[i],
+                         ecg_dl=dl_signals2plot[i],
+                         ecg_f=fil_signals2plot[i],
+                         signal_name=None,
+                         beat_no=None)
+
+
+
 
 

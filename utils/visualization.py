@@ -131,7 +131,7 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
 
 def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg_blw, 'k', label='ECG + BLW')
     plt.plot(ecg, 'g', label='ECG orig')
     plt.plot(ecg_dl, 'b', label='ECG DL Filtered')
@@ -148,18 +148,20 @@ def ecg_view(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
     else:
         plt.title('ECG signal for comparison')
 
+    plt.show()
+
 
 def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(16, 9))
     plt.plot(ecg, 'g', label='ECG orig')
     plt.plot(ecg_dl, 'b', label='ECG DL Filtered')
     plt.plot(ecg_f, 'r', label='ECG IIR Filtered')
-    plt.plot(ecg - ecg_dl, color='#0089ff', label='Difference ECG - DL Filter')
-    plt.plot(ecg - ecg_f, color='#0089ff', label='Difference ECG - IIR Filter')
+    plt.plot(ecg - ecg_dl, color='#0099ff', lw=3, label='Difference ECG - DL Filter')
+    plt.plot(ecg - ecg_f, color='#cb828d', lw=3, label='Difference ECG - IIR Filter')
     plt.grid(True)
 
-    plt.ylabel('au')
+    plt.ylabel('Amplitude (au)')
     plt.xlabel('samples')
 
     leg = ax.legend()
@@ -168,3 +170,5 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
         plt.title('Signal ' + str(signal_name) + 'beat ' + str(beat_no))
     else:
         plt.title('ECG signal for comparison')
+
+    plt.show()
