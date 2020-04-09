@@ -13,7 +13,7 @@
 
 import _pickle as pickle
 
-from utils.metrics import MAD, SSD, PRD
+from utils.metrics import MAD, SSD, PRD, COS_SIM
 from utils import visualization as vs
 from utils import data_preparation as dp
 
