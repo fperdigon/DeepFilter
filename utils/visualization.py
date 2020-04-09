@@ -172,3 +172,23 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
         plt.title('ECG signal for comparison')
 
     plt.show()
+
+
+def generate_table(np_data, description, title=None):
+    # Process the results and store in Panda objects
+
+    print('\n')
+    print('###################################')
+    print('\n')
+
+    if title != None:
+        print(title)
+    else:
+        print('Description Table')
+
+    print('\n')
+
+    for ind in range(len(description)):
+        print(description[ind])
+        print('Mean: ' + str(np.mean(np_data[ind])))
+        print('Std: ' + str(np.std(np_data[ind])))

@@ -256,6 +256,10 @@ if __name__ == "__main__":
     # generate_boxplot(PRD_all, Exp_all, 'PRD (au)', log=True)
     vs.generate_hboxplot(PRD_all, Exp_all, 'PRD (au)', log=False)
 
+    vs.generate_table(SSD_all, Exp_all, title='SSD results table')
+    vs.generate_table(MAD_all, Exp_all, title='MAD results table')
+    vs.generate_table(PRD_all, Exp_all, title='PRD results table')
+
     for i in range(len(signals_id)):
         vs.ecg_view(ecg=ecg_signals2plot[i],
                     ecg_blw=ecgbl_signals2plot[i],
