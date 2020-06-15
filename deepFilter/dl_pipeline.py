@@ -26,6 +26,13 @@ def ssd_loss(y_true, y_pred):
 def ssd_v2_loss(y_true, y_pred):
     return K.sum(K.square(y_pred - y_true)/(y_true*10 + 30), axis=-2) * 10 + K.sum(K.square(y_pred - y_true), axis=-2)
 
+# Combined loss SSD + MSE
+def combined_ssd_mse_loss(y_true, y_pred):
+    return K.mean(K.square(y_true - y_pred), axis=-2) * 500 + K.sum(K.square(y_true - y_pred), axis=-2)
+
+def combined_ssd_mad_loss(y_true, y_pred):
+    return K.max(K.square(y_true - y_pred), axis=-2) * 50 + K.sum(K.square(y_true - y_pred), axis=-2)
+
 
 # Custom loss SAD
 def sad_loss(y_true, y_pred):
@@ -48,33 +55,37 @@ def train_dl(Dataset, experiment):
     # LOAD THE DL MODEL
     # ==================
 
-
     if experiment == 0:
+        # FCN_DAE
+        model = models.FCN_DAE()
+        model_label = 'FCN_DAE'
+
+    if experiment == 1:
         # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
         model_label = 'vanilla_linear'
 
-    if experiment == 1:
+    if experiment == 2:
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'vanilla_nonlinear'
 
-    if experiment == 2:
+    if experiment == 3:
         # Inception-like linear
         model = models.deep_filter_I_linear()
         model_label = 'I_like_linear'
 
-    if experiment == 3:
+    if experiment == 4:
         # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
         model_label = 'I_like_Nlinear'
 
-    if experiment == 4:
+    if experiment == 5:
         # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
         model_label = 'I_like_LANL'
 
-    if experiment == 5:
+    if experiment == 6:
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
         model_label = 'I_like_LANL_dilated'
@@ -91,11 +102,19 @@ def train_dl(Dataset, experiment):
     # lr = 1e-4
     minimum_lr = 1e-10
 
-    model.compile(loss=ssd_v2_loss,
+    if experiment == 0:
+        model.compile(loss=ssd_loss,
+                      # optimizer=keras.optimizers.Adadelta(),
+                      optimizer=keras.optimizers.Adam(lr=lr),
+                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+
+    else:
+        model.compile(loss=combined_ssd_mad_loss,
                   # optimizer=keras.optimizers.Adadelta(),
                   optimizer=keras.optimizers.Adam(lr=lr),
                   # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss])
+                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # Keras Callbacks
 
@@ -164,37 +183,54 @@ def test_dl(Dataset, experiment):
 
     if experiment == 0:
         # Vanilla CNN linear
+        model = models.FCN_DAE()
+        model_label = 'FCN_DAE'
+
+    if experiment == 1:
+        # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
         model_label = 'vanilla_linear'
 
-    if experiment == 1:
+    if experiment == 2:
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'vanilla_nonlinear'
 
-    if experiment == 2:
+    if experiment == 3:
         # Inception-like linear
         model = models.deep_filter_I_linear()
         model_label = 'I_like_linear'
 
-    if experiment == 3:
+    if experiment == 4:
         # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
         model_label = 'I_like_Nlinear'
 
-    if experiment == 4:
+    if experiment == 5:
         # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
         model_label = 'I_like_LANL'
 
-    if experiment == 5:
+    if experiment == 6:
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
         model_label = 'I_like_LANL_dilated'
 
-    model.compile(loss=keras.losses.categorical_crossentropy,
+
+
+    if experiment == 0:
+        model.compile(loss=ssd_loss,
+                      # optimizer=keras.optimizers.Adadelta(),
+                      optimizer=keras.optimizers.Adam(lr=0.1),
+                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+
+    else:
+        model.compile(loss=combined_ssd_mad_loss,
+                  # optimizer=keras.optimizers.Adadelta(),
                   optimizer=keras.optimizers.Adam(lr=0.1),
-                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss])
+                  # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # checkpoint
     model_filepath = model_label + '_weights.best.hdf5'
