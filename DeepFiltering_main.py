@@ -13,7 +13,7 @@
 
 import _pickle as pickle
 
-from utils.metrics import MAD, SSD, PRD, COS_SIM
+from utils.metrics import MAD, SSD, PRD, COS_SIM, RMSE
 from utils import visualization as vs
 from utils import data_preparation as dp
 
@@ -22,15 +22,8 @@ from deepFilter.dl_pipeline import train_dl, test_dl
 
 if __name__ == "__main__":
 
-    # dl_experiments = ['Vanilla Linear',
-    #                   'Vanilla Non Linear',
-    #                   'Inception-like Linear',
-    #                   'Inception-like Non Linear',
-    #                   'Inception-like Linear and Non Linear',
-    #                   'Inception-like Linear and Non Linear Dilated'
-    #                   ]
-
-    dl_experiments = ['Vanilla L',
+    dl_experiments = ['FCN-DAE',
+                      'Vanilla L',
                       'Vanilla NL',
                       'Inception-like L',
                       'Inception-like NL',
@@ -38,39 +31,41 @@ if __name__ == "__main__":
                       'Inception-like LANLD'
                       ]
 
-    Dataset = dp.Data_Preparation()
 
-    for experiment in range(len(dl_experiments)):
+    if True:
+        Dataset = dp.Data_Preparation()
 
-        train_dl(Dataset, experiment)
+        for experiment in range(len(dl_experiments)):
 
-        [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
+            train_dl(Dataset, experiment)
 
-        test_results = [X_test, y_test, y_pred]
+            [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
 
-        # Save Results
-        with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results, output)
-        print('Results from experiment ' + str(experiment) + ' saved')
+            test_results = [X_test, y_test, y_pred]
+
+            # Save Results
+            with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
+                pickle.dump(test_results, output)
+            print('Results from experiment ' + str(experiment) + ' saved')
 
 
-    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+        [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
 
-    test_results_FIR = [X_test_f, y_test_f, y_filter]
+        test_results_FIR = [X_test_f, y_test_f, y_filter]
 
-    # Save FIR filter results
-    with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-        pickle.dump(test_results_FIR, output)
-    print('Results from experiment FIR filter saved')
+        # Save FIR filter results
+        with open('test_results_exp_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(test_results_FIR, output)
+        print('Results from experiment FIR filter saved')
 
-    [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
+        [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
 
-    test_results_IIR = [X_test_f, y_test_f, y_filter]
+        test_results_IIR = [X_test_f, y_test_f, y_filter]
 
-    # Save FIR filter results
-    with open('test_results_exp_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
-        pickle.dump(test_results_IIR, output)
-    print('Results from experiment IIR filter saved')
+        # Save FIR filter results
+        with open('test_results_exp_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(test_results_IIR, output)
+        print('Results from experiment IIR filter saved')
 
 
     ####### LOAD EXPERIMENTS #######
@@ -98,6 +93,10 @@ if __name__ == "__main__":
     # Load Results Exp 5
     with open('test_results_exp_5.pkl', 'rb') as input:
         test_exp_5 = pickle.load(input)
+
+    # Load Results Exp 6
+    with open('test_results_exp_6.pkl', 'rb') as input:
+        test_FCN_DAE = pickle.load(input)
 
 
     # Load Result FIR Filter
@@ -131,6 +130,9 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_0 = COS_SIM(y_test, y_pred)
 
+    RMSE_values_DL_exp_0 = RMSE(y_test, y_pred)
+
+
     # Exp 1
 
     [X_test, y_test, y_pred] = test_exp_1
@@ -142,6 +144,8 @@ if __name__ == "__main__":
     PRD_values_DL_exp_1 = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_exp_1 = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_exp_1 = RMSE(y_test, y_pred)
 
     # Exp 2
 
@@ -155,6 +159,8 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_2 = COS_SIM(y_test, y_pred)
 
+    RMSE_values_DL_exp_2 = RMSE(y_test, y_pred)
+
     # Exp 3
 
     [X_test, y_test, y_pred] = test_exp_3
@@ -166,6 +172,8 @@ if __name__ == "__main__":
     PRD_values_DL_exp_3 = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_exp_3 = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_exp_3 = RMSE(y_test, y_pred)
 
     # Exp 4
 
@@ -179,6 +187,8 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_4 = COS_SIM(y_test, y_pred)
 
+    RMSE_values_DL_exp_4 = RMSE(y_test, y_pred)
+
     # Exp 5 (Best)
 
     [X_test, y_test, y_pred] = test_exp_5
@@ -190,6 +200,22 @@ if __name__ == "__main__":
     PRD_values_DL_exp_5 = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_exp_5 = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_exp_5 = RMSE(y_test, y_pred)
+
+    # Exp FCN-DAE
+
+    [X_test, y_test, y_pred] = test_FCN_DAE
+
+    SSD_values_DL_FCN_DAE = SSD(y_test, y_pred)
+
+    MAD_values_DL_FCN_DAE = MAD(y_test, y_pred)
+
+    PRD_values_DL_FCN_DAE = PRD(y_test, y_pred)
+
+    COS_SIM_values_DL_FCN_DAE = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_FCN_DAE = RMSE(y_test, y_pred)
 
     for id in signals_id:
         ecgbl_signals2plot.append(X_test[id])
@@ -209,6 +235,8 @@ if __name__ == "__main__":
 
     COS_SIM_values_FIR = COS_SIM(y_test, y_filter)
 
+    RMSE_values_FIR = RMSE(y_test, y_pred)
+
     # IIR Filtering Metrics (Best)
     [X_test, y_test, y_filter] = test_exp_IIR
 
@@ -220,6 +248,8 @@ if __name__ == "__main__":
 
     COS_SIM_values_IIR = COS_SIM(y_test, y_filter)
 
+    RMSE_values_IIR = RMSE(y_test, y_pred)
+
     for id in signals_id:
         fil_signals2plot.append(y_filter[id])
 
@@ -227,6 +257,7 @@ if __name__ == "__main__":
 
     SSD_all = [SSD_values_FIR,
                SSD_values_IIR,
+               SSD_values_DL_FCN_DAE,
                SSD_values_DL_exp_0,
                SSD_values_DL_exp_1,
                SSD_values_DL_exp_2,
@@ -237,6 +268,7 @@ if __name__ == "__main__":
 
     MAD_all = [MAD_values_FIR,
                MAD_values_IIR,
+               MAD_values_DL_FCN_DAE,
                MAD_values_DL_exp_0,
                MAD_values_DL_exp_1,
                MAD_values_DL_exp_2,
@@ -247,6 +279,7 @@ if __name__ == "__main__":
 
     PRD_all = [PRD_values_FIR,
                PRD_values_IIR,
+               PRD_values_DL_FCN_DAE,
                PRD_values_DL_exp_0,
                PRD_values_DL_exp_1,
                PRD_values_DL_exp_2,
@@ -255,8 +288,20 @@ if __name__ == "__main__":
                PRD_values_DL_exp_5
                ]
 
+    RMSE_all = [RMSE_values_FIR,
+                RMSE_values_IIR,
+                RMSE_values_DL_FCN_DAE,
+                RMSE_values_DL_exp_0,
+                RMSE_values_DL_exp_1,
+                RMSE_values_DL_exp_2,
+                RMSE_values_DL_exp_3,
+                RMSE_values_DL_exp_4,
+                RMSE_values_DL_exp_5
+                ]
+
     CORR_all = [COS_SIM_values_FIR,
                 COS_SIM_values_IIR,
+                COS_SIM_values_DL_FCN_DAE,
                 COS_SIM_values_DL_exp_0,
                 COS_SIM_values_DL_exp_1,
                 COS_SIM_values_DL_exp_2,
@@ -265,35 +310,37 @@ if __name__ == "__main__":
                 COS_SIM_values_DL_exp_5
                 ]
 
-    Exp_all = ['FIR Filter', 'IIR Filter'] + dl_experiments
 
-    vs.generate_hboxplot(SSD_all, Exp_all, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
+    Exp_names = ['FIR Filter', 'IIR Filter'] + dl_experiments
 
-    vs.generate_hboxplot(MAD_all, Exp_all, 'MAD (au)', log=False)
+    vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
+    vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 2))
+    vs.generate_hboxplot(PRD_all, Exp_names, 'PRD (au)', log=False)
+    vs.generate_hboxplot(RMSE_all, Exp_names, 'RMSE (au)', log=False)
+    vs.generate_hboxplot(CORR_all, Exp_names, 'Cosine Similarity (0-1)', log=False, set_x_axis_size=(0, 1))
 
-    vs.generate_hboxplot(PRD_all, Exp_all, 'PRD (au)', log=False)
+    metrics = ['SSD', 'MAD', 'PRD', 'RMSE', 'COS_SIM']
+    metric_values = [SSD_all, MAD_all, PRD_all, RMSE_all, CORR_all]
 
-    vs.generate_hboxplot(CORR_all, Exp_all, 'Cosine Similarity (0-1)', log=False)
+    vs.generate_table(metrics, metric_values, Exp_names)
 
-    vs.generate_table(SSD_all, Exp_all, title='SSD results table')
-    vs.generate_table(MAD_all, Exp_all, title='MAD results table')
-    vs.generate_table(PRD_all, Exp_all, title='PRD results table')
-    vs.generate_table(CORR_all, Exp_all, title='COS SIM results table')
 
-    for i in range(len(signals_id)):
-        vs.ecg_view(ecg=ecg_signals2plot[i],
-                    ecg_blw=ecgbl_signals2plot[i],
-                    ecg_dl=dl_signals2plot[i],
-                    ecg_f=fil_signals2plot[i],
-                    signal_name=None,
-                    beat_no=None)
 
-        vs.ecg_view_diff(ecg=ecg_signals2plot[i],
-                         ecg_blw=ecgbl_signals2plot[i],
-                         ecg_dl=dl_signals2plot[i],
-                         ecg_f=fil_signals2plot[i],
-                         signal_name=None,
-                         beat_no=None)
+    # Visualize signals
+    # for i in range(len(signals_id)):
+    #     vs.ecg_view(ecg=ecg_signals2plot[i],
+    #                 ecg_blw=ecgbl_signals2plot[i],
+    #                 ecg_dl=dl_signals2plot[i],
+    #                 ecg_f=fil_signals2plot[i],
+    #                 signal_name=None,
+    #                 beat_no=None)
+    #
+    #     vs.ecg_view_diff(ecg=ecg_signals2plot[i],
+    #                      ecg_blw=ecgbl_signals2plot[i],
+    #                      ecg_dl=dl_signals2plot[i],
+    #                      ecg_f=fil_signals2plot[i],
+    #                      signal_name=None,
+    #                      beat_no=None)
 
 
 
