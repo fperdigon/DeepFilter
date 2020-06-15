@@ -44,9 +44,9 @@ if __name__ == "__main__":
             test_results = [X_test, y_test, y_pred]
 
             # Save Results
-            with open('test_results_exp_' + str(experiment) +'.pkl', 'wb') as output:  # Overwrites any existing file.
+            with open('test_results_exp_' + dl_experiments[experiment] +'.pkl', 'wb') as output:  # Overwrites any existing file.
                 pickle.dump(test_results, output)
-            print('Results from experiment ' + str(experiment) + ' saved')
+            print('Results from experiment ' + dl_experiments[experiment] + ' saved')
 
 
         [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
@@ -70,33 +70,33 @@ if __name__ == "__main__":
 
     ####### LOAD EXPERIMENTS #######
 
-    # Load Results Exp 0
-    with open('test_results_exp_0.pkl', 'rb') as input:
-        test_exp_0 = pickle.load(input)
+    # Load Results Exp FCN_DAE
+    with open('test_results_exp_' + dl_experiments[0] +'.pkl', 'rb') as input:
+        test_exp_FCN_DAE = pickle.load(input)
 
-    # Load Results Exp 1
-    with open('test_results_exp_1.pkl', 'rb') as input:
-        test_exp_1 = pickle.load(input)
+    # Load Results Exp Vanilla L
+    with open('test_results_exp_' + dl_experiments[1] +'.pkl', 'rb') as input:
+        test_exp_Vanilla_L = pickle.load(input)
 
-    # Load Results Exp 2
-    with open('test_results_exp_2.pkl', 'rb') as input:
-        test_exp_2 = pickle.load(input)
+    # Load Results Exp Vanilla NL
+    with open('test_results_exp_' + dl_experiments[2] +'.pkl', 'rb') as input:
+        test_exp_Vanilla_NL = pickle.load(input)
 
-    # Load Results Exp 3
-    with open('test_results_exp_3.pkl', 'rb') as input:
-        test_exp_3 = pickle.load(input)
+    # Load Results Exp Inception-like L
+    with open('test_results_exp_' + dl_experiments[3] +'.pkl', 'rb') as input:
+        test_exp_Inception_like_L = pickle.load(input)
 
-    # Load Results Exp 4
-    with open('test_results_exp_4.pkl', 'rb') as input:
-        test_exp_4 = pickle.load(input)
+    # Load Results Exp Inception-like NL
+    with open('test_results_exp_' + dl_experiments[4] +'.pkl', 'rb') as input:
+        test_exp_Inception_like_NL = pickle.load(input)
 
-    # Load Results Exp 5
-    with open('test_results_exp_5.pkl', 'rb') as input:
-        test_exp_5 = pickle.load(input)
+    # Load Results Exp Inception-like LANL
+    with open('test_results_exp_' + dl_experiments[5] +'.pkl', 'rb') as input:
+        test_exp_Inception_like_LANL = pickle.load(input)
 
-    # Load Results Exp 6
-    with open('test_results_exp_6.pkl', 'rb') as input:
-        test_FCN_DAE = pickle.load(input)
+    # Load Results Exp Inception-like LANLD
+    with open('test_results_exp_' + dl_experiments[6] +'.pkl', 'rb') as input:
+        test_exp_Inception_like_LANLD = pickle.load(input)
 
 
     # Load Result FIR Filter
@@ -118,24 +118,25 @@ if __name__ == "__main__":
 
     # DL Metrics
 
-    # Exp 0
 
-    [X_test, y_test, y_pred] = test_exp_0
+    # Exp FCN-DAE
 
-    SSD_values_DL_exp_0 = SSD(y_test, y_pred)
+    [X_test, y_test, y_pred] = test_exp_FCN_DAE
 
-    MAD_values_DL_exp_0 = MAD(y_test, y_pred)
+    SSD_values_DL_FCN_DAE = SSD(y_test, y_pred)
 
-    PRD_values_DL_exp_0 = PRD(y_test, y_pred)
+    MAD_values_DL_FCN_DAE = MAD(y_test, y_pred)
 
-    COS_SIM_values_DL_exp_0 = COS_SIM(y_test, y_pred)
+    PRD_values_DL_FCN_DAE = PRD(y_test, y_pred)
 
-    RMSE_values_DL_exp_0 = RMSE(y_test, y_pred)
+    COS_SIM_values_DL_FCN_DAE = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_FCN_DAE = RMSE(y_test, y_pred)
 
 
     # Exp 1
 
-    [X_test, y_test, y_pred] = test_exp_1
+    [X_test, y_test, y_pred] = test_exp_Vanilla_L
 
     SSD_values_DL_exp_1 = SSD(y_test, y_pred)
 
@@ -149,7 +150,7 @@ if __name__ == "__main__":
 
     # Exp 2
 
-    [X_test, y_test, y_pred] = test_exp_2
+    [X_test, y_test, y_pred] = test_exp_Vanilla_NL
 
     SSD_values_DL_exp_2 = SSD(y_test, y_pred)
 
@@ -163,7 +164,7 @@ if __name__ == "__main__":
 
     # Exp 3
 
-    [X_test, y_test, y_pred] = test_exp_3
+    [X_test, y_test, y_pred] = test_exp_Inception_like_L
 
     SSD_values_DL_exp_3 = SSD(y_test, y_pred)
 
@@ -177,7 +178,7 @@ if __name__ == "__main__":
 
     # Exp 4
 
-    [X_test, y_test, y_pred] = test_exp_4
+    [X_test, y_test, y_pred] = test_exp_Inception_like_NL
 
     SSD_values_DL_exp_4 = SSD(y_test, y_pred)
 
@@ -189,9 +190,9 @@ if __name__ == "__main__":
 
     RMSE_values_DL_exp_4 = RMSE(y_test, y_pred)
 
-    # Exp 5 (Best)
+    # Exp 5
 
-    [X_test, y_test, y_pred] = test_exp_5
+    [X_test, y_test, y_pred] = test_exp_Inception_like_LANL
 
     SSD_values_DL_exp_5 = SSD(y_test, y_pred)
 
@@ -203,19 +204,22 @@ if __name__ == "__main__":
 
     RMSE_values_DL_exp_5 = RMSE(y_test, y_pred)
 
-    # Exp FCN-DAE
 
-    [X_test, y_test, y_pred] = test_FCN_DAE
+    # Exp 0
 
-    SSD_values_DL_FCN_DAE = SSD(y_test, y_pred)
+    [X_test, y_test, y_pred] = test_exp_Inception_like_LANLD
 
-    MAD_values_DL_FCN_DAE = MAD(y_test, y_pred)
+    SSD_values_DL_exp_6 = SSD(y_test, y_pred)
 
-    PRD_values_DL_FCN_DAE = PRD(y_test, y_pred)
+    MAD_values_DL_exp_6 = MAD(y_test, y_pred)
 
-    COS_SIM_values_DL_FCN_DAE = COS_SIM(y_test, y_pred)
+    PRD_values_DL_exp_6 = PRD(y_test, y_pred)
 
-    RMSE_values_DL_FCN_DAE = RMSE(y_test, y_pred)
+    COS_SIM_values_DL_exp_6 = COS_SIM(y_test, y_pred)
+
+    RMSE_values_DL_exp_6 = RMSE(y_test, y_pred)
+
+
 
     for id in signals_id:
         ecgbl_signals2plot.append(X_test[id])
@@ -258,56 +262,56 @@ if __name__ == "__main__":
     SSD_all = [SSD_values_FIR,
                SSD_values_IIR,
                SSD_values_DL_FCN_DAE,
-               SSD_values_DL_exp_0,
                SSD_values_DL_exp_1,
                SSD_values_DL_exp_2,
                SSD_values_DL_exp_3,
                SSD_values_DL_exp_4,
-               SSD_values_DL_exp_5
+               SSD_values_DL_exp_5,
+               SSD_values_DL_exp_6,
                ]
 
     MAD_all = [MAD_values_FIR,
                MAD_values_IIR,
                MAD_values_DL_FCN_DAE,
-               MAD_values_DL_exp_0,
                MAD_values_DL_exp_1,
                MAD_values_DL_exp_2,
                MAD_values_DL_exp_3,
                MAD_values_DL_exp_4,
-               MAD_values_DL_exp_5
+               MAD_values_DL_exp_5,
+               MAD_values_DL_exp_6,
                ]
 
     PRD_all = [PRD_values_FIR,
                PRD_values_IIR,
                PRD_values_DL_FCN_DAE,
-               PRD_values_DL_exp_0,
                PRD_values_DL_exp_1,
                PRD_values_DL_exp_2,
                PRD_values_DL_exp_3,
                PRD_values_DL_exp_4,
-               PRD_values_DL_exp_5
+               PRD_values_DL_exp_5,
+               PRD_values_DL_exp_6,
                ]
 
     RMSE_all = [RMSE_values_FIR,
                 RMSE_values_IIR,
                 RMSE_values_DL_FCN_DAE,
-                RMSE_values_DL_exp_0,
                 RMSE_values_DL_exp_1,
                 RMSE_values_DL_exp_2,
                 RMSE_values_DL_exp_3,
                 RMSE_values_DL_exp_4,
-                RMSE_values_DL_exp_5
+                RMSE_values_DL_exp_5,
+                RMSE_values_DL_exp_6,
                 ]
 
     CORR_all = [COS_SIM_values_FIR,
                 COS_SIM_values_IIR,
                 COS_SIM_values_DL_FCN_DAE,
-                COS_SIM_values_DL_exp_0,
                 COS_SIM_values_DL_exp_1,
                 COS_SIM_values_DL_exp_2,
                 COS_SIM_values_DL_exp_3,
                 COS_SIM_values_DL_exp_4,
-                COS_SIM_values_DL_exp_5
+                COS_SIM_values_DL_exp_5,
+                COS_SIM_values_DL_exp_6,
                 ]
 
 
