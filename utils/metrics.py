@@ -11,7 +11,6 @@
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import jaccard_score
 
 def SSD(y, y_pred):
     return np.sum(np.square(y - y_pred), axis=1)  # axis 1 is the signal dimension
@@ -43,4 +42,6 @@ def COS_SIM(y, y_pred):
     cos_sim = np.array(cos_sim)
     return cos_sim
 
+def RMSE(y, y_pred):
+    return np.mean(np.sqrt(np.square(y - y_pred)), axis=1)
 
