@@ -12,7 +12,9 @@
 
 import keras
 from keras.models import Sequential, Model
-from keras.layers import Dense, Conv1D, Flatten, Dropout, BatchNormalization, concatenate, Activation, Input, Conv2DTranspose, Lambda
+from keras.layers import Dense, Conv1D, Flatten, Dropout, BatchNormalization,\
+                         concatenate, Activation, Input, Conv2DTranspose, Lambda, LSTM
+
 import keras.backend as K
 
 def Conv1DTranspose(input_tensor, filters, kernel_size, strides=2, activation='relu', padding='same'):
@@ -496,4 +498,18 @@ def FCN_DAE():
                         padding='same')
 
     model = Model(inputs=[input], outputs=predictions)
+    return model
+
+
+
+def DRRN_denoising():
+    # Implementation of DRNN approach presented in
+    # Antczak, K. (2018). Deep recurrent neural networks for ECG signal denoising.
+    # arXiv preprint arXiv:1807.11551.
+
+    model = Sequential()
+    model.add(LSTM(64, input_dim=(512,1)))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(512, activation='linear'))
     return model
