@@ -13,7 +13,7 @@
 import keras
 from keras.models import Sequential, Model
 from keras.layers import Dense, Conv1D, Flatten, Dropout, BatchNormalization,\
-                         concatenate, Activation, Input, Conv2DTranspose, Lambda, LSTM
+                         concatenate, Activation, Input, Conv2DTranspose, Lambda, LSTM, Reshape, Embedding
 
 import keras.backend as K
 
@@ -339,11 +339,17 @@ def deep_filter_I_LANL():
     input = Input(shape=input_shape)
 
     tensor = LANLFilter_module(input, 64)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 64)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 32)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 32)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 16)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 16)
+    tensor = BatchNormalization()(tensor)
     predictions = Conv1D(filters=1,
                     kernel_size=10,
                     activation='linear',
@@ -361,11 +367,17 @@ def deep_filter_model_I_LANL_dilated():
     input = Input(shape=input_shape)
 
     tensor = LANLFilter_module(input, 64)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module_dilated(tensor, 64)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 32)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module_dilated(tensor, 32)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module(tensor, 16)
+    tensor = BatchNormalization()(tensor)
     tensor = LANLFilter_module_dilated(tensor, 16)
+    tensor = BatchNormalization()(tensor)
     predictions = Conv1D(filters=1,
                     kernel_size=10,
                     activation='linear',
@@ -507,9 +519,21 @@ def DRRN_denoising():
     # Antczak, K. (2018). Deep recurrent neural networks for ECG signal denoising.
     # arXiv preprint arXiv:1807.11551.
 
+    # input_shape = (512, 1)
+    # input = Input(shape=input_shape)
+    #
+    # # x = Reshape(target_shape=(512, 1, 1))(input)
+    # # x = LSTM(64, input_shape=(512,1))(x)
+    # x = LSTM(64, input_shape=(512, 1), return_sequences=True)(input)
+    # x = Dense(64, activation='relu')(x)
+    # x = Dense(64, activation='relu')(x)
+    # predictions = Dense(512, activation='linear')(x)
+    # model = Model(inputs=[input], outputs=predictions)
+
     model = Sequential()
-    model.add(LSTM(64, input_dim=(512,1)))
+    model.add(LSTM(64, input_shape=(512, 1), return_sequences=True))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))
-    model.add(Dense(512, activation='linear'))
+    model.add(Dense(1, activation='linear'))
+
     return model
