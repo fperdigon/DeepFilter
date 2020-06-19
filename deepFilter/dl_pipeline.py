@@ -55,40 +55,54 @@ def train_dl(Dataset, experiment):
     # LOAD THE DL MODEL
     # ==================
 
-    if experiment == 0:
+
+    if experiment == 'FCN-DAE':
         # FCN_DAE
         model = models.FCN_DAE()
         model_label = 'FCN_DAE'
 
-    if experiment == 1:
+    if experiment == 'DRNN':
+        # DRNN
+
+        # # reshape from [samples, timesteps] into [samples, timesteps, features]
+        # n_features = 1
+        # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], n_features))
+        # y_train = y_train.reshape((y_train.shape[0], y_train.shape[1], n_features))
+        # X_val = X_val.reshape((X_val.shape[0], X_val.shape[1], n_features))
+        # y_val = y_val.reshape((y_val.shape[0], y_val.shape[1], n_features))
+
+        model = models.DRRN_denoising()
+        model_label = 'DRNN'
+
+    if experiment == 'Vanilla L':
         # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
-        model_label = 'vanilla_linear'
+        model_label = 'Vanilla_L'
 
-    if experiment == 2:
+    if experiment == 'Vanilla NL':
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
-        model_label = 'vanilla_nonlinear'
+        model_label = 'Vanilla_NL'
 
-    if experiment == 3:
+    if experiment == 'Inception-like L':
         # Inception-like linear
         model = models.deep_filter_I_linear()
-        model_label = 'I_like_linear'
+        model_label = 'Inception-like_L'
 
-    if experiment == 4:
+    if experiment == 'Inception-like NL':
         # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
-        model_label = 'I_like_Nlinear'
+        model_label = 'Inception-like_NL'
 
-    if experiment == 5:
+    if experiment == 'Inception-like LANL':
         # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
-        model_label = 'I_like_LANL'
+        model_label = 'Inception-like_LANL'
 
-    if experiment == 6:
+    if experiment == 'Inception-like LANLD':
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
-        model_label = 'I_like_LANL_dilated'
+        model_label = 'Inception-like_LANLD'
 
 
     print('\n ' + model_label + '\n ')
@@ -102,7 +116,7 @@ def train_dl(Dataset, experiment):
     # lr = 1e-4
     minimum_lr = 1e-10
 
-    if experiment == 0:
+    if experiment == 'DRNN' or experiment == 'FCN-DAE':
         model.compile(loss=ssd_loss,
                       # optimizer=keras.optimizers.Adadelta(),
                       optimizer=keras.optimizers.Adam(lr=lr),
@@ -111,10 +125,10 @@ def train_dl(Dataset, experiment):
 
     else:
         model.compile(loss=combined_ssd_mad_loss,
-                  # optimizer=keras.optimizers.Adadelta(),
-                  optimizer=keras.optimizers.Adam(lr=lr),
-                  # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+                      # optimizer=keras.optimizers.Adadelta(),
+                      optimizer=keras.optimizers.Adam(lr=lr),
+                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # Keras Callbacks
 
@@ -158,7 +172,8 @@ def train_dl(Dataset, experiment):
     # GPU
     model.fit(x=X_train, y=y_train,
               validation_data=(X_val, y_val),
-              batch_size=batch_size, epochs=epochs,
+              batch_size=batch_size,
+              epochs=epochs,
               verbose=1,
               callbacks=[early_stop,
                          reduce_lr,
@@ -181,45 +196,59 @@ def test_dl(Dataset, experiment):
     # LOAD THE DL MODEL
     # ==================
 
-    if experiment == 0:
-        # Vanilla CNN linear
+    if experiment == 'FCN-DAE':
+        # FCN_DAE
         model = models.FCN_DAE()
         model_label = 'FCN_DAE'
 
-    if experiment == 1:
+    if experiment == 'DRNN':
+        # DRNN
+        model = models.DRRN_denoising()
+        model_label = 'DRNN'
+
+    if experiment == 'Vanilla L':
         # Vanilla CNN linear
         model = models.deep_filter_vanilla_linear()
-        model_label = 'vanilla_linear'
+        model_label = 'Vanilla_L'
 
-    if experiment == 2:
+    if experiment == 'Vanilla NL':
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
-        model_label = 'vanilla_nonlinear'
+        model_label = 'Vanilla_NL'
 
-    if experiment == 3:
+    if experiment == 'Inception-like L':
         # Inception-like linear
         model = models.deep_filter_I_linear()
-        model_label = 'I_like_linear'
+        model_label = 'Inception-like_L'
 
-    if experiment == 4:
+    if experiment == 'Inception-like NL':
         # Inception-like non linear
         model = models.deep_filter_I_Nlinear()
-        model_label = 'I_like_Nlinear'
+        model_label = 'Inception-like_NL'
 
-    if experiment == 5:
+    if experiment == 'Inception-like LANL':
         # Inception-like linear and non linear
         model = models.deep_filter_I_LANL()
-        model_label = 'I_like_LANL'
+        model_label = 'Inception-like_LANL'
 
-    if experiment == 6:
+    if experiment == 'Inception-like LANLD':
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
-        model_label = 'I_like_LANL_dilated'
+        model_label = 'Inception-like_LANL'
 
+    print('\n ' + model_label + '\n ')
 
+    model.summary()
 
-    if experiment == 0:
+    if experiment == 'FCN-DAE':
         model.compile(loss=ssd_loss,
+                      # optimizer=keras.optimizers.Adadelta(),
+                      optimizer=keras.optimizers.Adam(lr=0.1),
+                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+
+    elif experiment == 'DRNN':
+        model.compile(loss=losses.mean_squared_error,
                       # optimizer=keras.optimizers.Adadelta(),
                       optimizer=keras.optimizers.Adam(lr=0.1),
                       # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
@@ -239,6 +268,7 @@ def test_dl(Dataset, experiment):
 
     # Test score
     y_pred = model.predict(X_test, batch_size=batch_size, verbose=1)
+
 
     K.clear_session()
 
