@@ -33,12 +33,21 @@ if __name__ == "__main__":
 
     if True:
         Dataset = dp.Data_Preparation()
+        
+        # Save dataset
+        with open('dataset.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(Dataset, output)
+        print('Dataset saved')
+        
+        # Load dataset
+        with open('dataset.pkl', 'rb') as input:
+            Dataset = pickle.load(input)
 
         for experiment in range(len(dl_experiments)):
 
-            train_dl(Dataset, experiment)
+            train_dl(Dataset, dl_experiments[experiment])
 
-            [X_test, y_test, y_pred] = test_dl(Dataset, experiment)
+            [X_test, y_test, y_pred] = test_dl(Dataset, dl_experiments[experiment])
 
             test_results = [X_test, y_test, y_pred]
 
@@ -61,7 +70,7 @@ if __name__ == "__main__":
 
         test_results_IIR = [X_test_f, y_test_f, y_filter]
 
-        # Save FIR filter results
+        # Save IIR filter results
         with open('test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
             pickle.dump(test_results_IIR, output)
         print('Results from experiment IIR filter saved')
@@ -74,23 +83,23 @@ if __name__ == "__main__":
        test_DRNN = pickle.load(input)
 
     # Load Results FCN_DAE
-    with open('test_results_' + dl_experiments[0] +'.pkl', 'rb') as input:
+    with open('test_results_' + dl_experiments[1] +'.pkl', 'rb') as input:
         test_FCN_DAE = pickle.load(input)
 
     # Load Results Vanilla L
-    with open('test_results_' + dl_experiments[1] +'.pkl', 'rb') as input:
+    with open('test_results_' + dl_experiments[2] +'.pkl', 'rb') as input:
         test_Vanilla_L = pickle.load(input)
 
     # Load Results Exp Vanilla NL
-    with open('test_results_' + dl_experiments[2] +'.pkl', 'rb') as input:
+    with open('test_results_' + dl_experiments[3] +'.pkl', 'rb') as input:
         test_Vanilla_NL = pickle.load(input)
 
     # Load Results Inception-like LANL
-    with open('test_results_' + dl_experiments[5] +'.pkl', 'rb') as input:
+    with open('test_results_' + dl_experiments[4] +'.pkl', 'rb') as input:
         test_Inception_like_LANL = pickle.load(input)
 
     # Load Results Inception-like LANLD
-    with open('test_results_' + dl_experiments[6] +'.pkl', 'rb') as input:
+    with open('test_results_' + dl_experiments[5] +'.pkl', 'rb') as input:
         test_Inception_like_LANLD = pickle.load(input)
 
     # Load Result FIR Filter
@@ -294,6 +303,11 @@ if __name__ == "__main__":
 
 
     Exp_names = ['FIR Filter', 'IIR Filter'] + dl_experiments
+    
+    metrics = ['SSD', 'MAD', 'PRD', 'RMSE', 'COS_SIM']
+    metric_values = [SSD_all, MAD_all, PRD_all, RMSE_all, CORR_all]
+
+    vs.generate_table(metrics, metric_values, Exp_names)
 
     vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
     vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 2))
@@ -301,28 +315,21 @@ if __name__ == "__main__":
     vs.generate_hboxplot(RMSE_all, Exp_names, 'RMSE (au)', log=False)
     vs.generate_hboxplot(CORR_all, Exp_names, 'Cosine Similarity (0-1)', log=False, set_x_axis_size=(0, 1))
 
-    metrics = ['SSD', 'MAD', 'PRD', 'RMSE', 'COS_SIM']
-    metric_values = [SSD_all, MAD_all, PRD_all, RMSE_all, CORR_all]
-
-    vs.generate_table(metrics, metric_values, Exp_names)
-
-
-
     # Visualize signals
-    # for i in range(len(signals_id)):
-    #     vs.ecg_view(ecg=ecg_signals2plot[i],
-    #                 ecg_blw=ecgbl_signals2plot[i],
-    #                 ecg_dl=dl_signals2plot[i],
-    #                 ecg_f=fil_signals2plot[i],
-    #                 signal_name=None,
-    #                 beat_no=None)
-    #
-    #     vs.ecg_view_diff(ecg=ecg_signals2plot[i],
-    #                      ecg_blw=ecgbl_signals2plot[i],
-    #                      ecg_dl=dl_signals2plot[i],
-    #                      ecg_f=fil_signals2plot[i],
-    #                      signal_name=None,
-    #                      beat_no=None)
+    for i in range(len(signals_id)):
+        vs.ecg_view(ecg=ecg_signals2plot[i],
+                    ecg_blw=ecgbl_signals2plot[i],
+                    ecg_dl=dl_signals2plot[i],
+                    ecg_f=fil_signals2plot[i],
+                    signal_name=None,
+                    beat_no=None)
+
+        vs.ecg_view_diff(ecg=ecg_signals2plot[i],
+                         ecg_blw=ecgbl_signals2plot[i],
+                         ecg_dl=dl_signals2plot[i],
+                         ecg_f=fil_signals2plot[i],
+                         signal_name=None,
+                         beat_no=None)
 
 
 
