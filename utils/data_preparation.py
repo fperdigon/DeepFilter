@@ -12,6 +12,7 @@
 import scipy.io as sio
 import numpy as np
 
+
 def Data_Preparation():
 
     print('Getting the Data ready ... ')
@@ -115,64 +116,32 @@ def Data_Preparation():
                 beats_train.append(b_np)
 
 
-    # Calculate the maximum beat size to determine the noise aditive factor
-
-    beats_max_value_list = []
-    for bt in beats_train:
-        beats_max_value_list.append(np.max(bt))
-
-    for bte in beats_test:
-        beats_max_value_list.append(np.mean(bte))
-
-    beats_max_mean_value = np.mean(beats_max_value_list)
-    beats_max_median_value = np.median(beats_max_value_list)
-
-    noise_max_value_list = []
-    for i in range(0, len(noise_train), samples):
-        noise_max_value_list.append(np.max(noise_train[i: i+samples]))
-
-    for i in range(0, len(noise_test), samples):
-        noise_max_value_list.append(np.max(noise_test[i: i+samples]))
-
-    noise_max_mean_value = np.mean(noise_max_value_list)
-    noise_max_std_value = np.std(noise_max_value_list)
-
-    # import matplotlib.pyplot as plt
-    #
-    # plt.hist(beats_max_value_list, bins=1000)
-    # plt.title('ECG beats Max values histogram')
-    # plt.plot([beats_max_mean_value, beats_max_mean_value], [0, 1000], 'r')
-    # plt.plot([beats_max_median_value, beats_max_median_value], [0, 1000], 'g')
-    # plt.legend(('mean', 'median'))
-    # plt.show()
-    #
-    # plt.hist(noise_max_value_list, bins=1000)
-    # plt.plot([noise_max_mean_value, noise_max_mean_value], [0, 50], 'r')
-    # plt.plot([noise_max_std_value, noise_max_std_value], [0, 50], 'g')
-    # plt.title('Noise 512 samples split Max values histogram')
-    # plt.legend(('mean', 'std'))
-    # plt.show()
-
-
-    Ase = noise_max_mean_value / beats_max_median_value
-
-    # According to Friesen and collaborator BLW due to electrode movement can be up to 5 times higher that the R peark
-    # Friesen, G. M., Jannett, T. C., Jadallah, M. A., Yates, S. L., Quint, S. R., & Nagle, H. T. (1990).
-    # A comparison of the noise sensitivity of nine QRS detection algorithms.
-    # IEEE Transactions on biomedical engineering, 37(1), 85-98.
-
-    alpha = 5 / Ase
-
     sn_train = []
     sn_test = []
 
     noise_index = 0
 
-    # Continuous noise sampling approach
+    # Noise was added in a proportion from 0.2 to 2 times the ECG signal amplitude
+    # Similar to
+    # W. Muldrow, R.G. Mark, & Moody, G. B. (1984).
+    # A noise stress test for arrhythmia detectors.
+    # Computers in Cardiology, 381–384
 
     for s in beats_train:
 
-        signal_noise = s + alpha * noise_train[noise_index:noise_index + samples]
+        noise = noise_train[noise_index:noise_index + samples]
+
+        beat_max_value = np.max(s) - np.min(s)
+
+        noise_max_value = np.max(noise) - np.min(noise)
+
+        Ase = noise_max_value / beat_max_value
+
+        rnd = np.random.randint(low=20, high=200, size=1) / 100
+
+        alpha = rnd / Ase
+
+        signal_noise = s + alpha * noise
 
         sn_train.append(signal_noise)
 
@@ -185,8 +154,19 @@ def Data_Preparation():
 
     for s in beats_test:
 
-        signal_noise = s + alpha * noise_test[noise_index:noise_index + samples]
+        noise = noise_train[noise_index:noise_index + samples]
 
+        beat_max_value = np.max(s) - np.min(s)
+
+        noise_max_value = np.max(noise) - np.min(noise)
+
+        Ase = noise_max_value / beat_max_value
+
+        rnd = np.random.randint(low=20, high=200, size=1) / 100
+
+        alpha = rnd / Ase
+
+        signal_noise = s + alpha * noise
         sn_test.append(signal_noise)
 
         noise_index += samples
