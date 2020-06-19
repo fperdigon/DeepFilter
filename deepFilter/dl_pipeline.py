@@ -111,7 +111,7 @@ def train_dl(Dataset, experiment):
 
     epochs = int(1e5)  # 100000
     # epochs = 100
-    batch_size = 32
+    batch_size = 128
     lr = 1e-3
     # lr = 1e-4
     minimum_lr = 1e-10
@@ -234,7 +234,7 @@ def test_dl(Dataset, experiment):
     if experiment == 'Inception-like LANLD':
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
-        model_label = 'Inception-like_LANL'
+        model_label = 'Inception-like_LANLD'
 
     print('\n ' + model_label + '\n ')
 
