@@ -19,24 +19,6 @@ def Data_Preparation():
     qtdatabase = sio.loadmat('QTDatabase.mat')
     nstd = sio.loadmat('NoiseBWL.mat')
 
-    #####################################
-    # QTDatabase
-    #####################################
-
-    max_len = 0
-
-    signal_no = 2
-
-    for i in range(len(qtdatabase['QTDatabase']['signals'][0, 0][signal_no][0])):
-
-        signal_test = qtdatabase['QTDatabase']['signals'][0, 0][signal_no][0][i][0]  # Access to a beat in signal 21
-        name_test = qtdatabase['QTDatabase']['Names'][0, 0][0][signal_no][0]  # Access to the beat with i variable
-
-        if max_len < len(signal_test):
-            max_len = len(signal_test)
-
-
-
 
     #####################################
     # NSTD
@@ -58,6 +40,10 @@ def Data_Preparation():
         (noise_channel1[0:int(noise_channel1.shape[0] * 0.13)], noise_channel2[0:int(noise_channel2.shape[0] * 0.13)]))
     noise_train = np.concatenate((noise_channel1[int(noise_channel1.shape[0] * 0.13):-1],
                                   noise_channel2[int(noise_channel2.shape[0] * 0.13):-1]))
+
+    #####################################
+    # QTDatabase
+    #####################################
 
     beats_train = []
     beats_test = []
@@ -128,6 +114,55 @@ def Data_Preparation():
             else:
                 beats_train.append(b_np)
 
+
+    # Calculate the maximum beat size to determine the noise aditive factor
+
+    beats_max_value_list = []
+    for bt in beats_train:
+        beats_max_value_list.append(np.max(bt))
+
+    for bte in beats_test:
+        beats_max_value_list.append(np.mean(bte))
+
+    beats_max_mean_value = np.mean(beats_max_value_list)
+    beats_max_median_value = np.median(beats_max_value_list)
+
+    noise_max_value_list = []
+    for i in range(0, len(noise_train), samples):
+        noise_max_value_list.append(np.max(noise_train[i: i+samples]))
+
+    for i in range(0, len(noise_test), samples):
+        noise_max_value_list.append(np.max(noise_test[i: i+samples]))
+
+    noise_max_mean_value = np.mean(noise_max_value_list)
+    noise_max_std_value = np.std(noise_max_value_list)
+
+    # import matplotlib.pyplot as plt
+    #
+    # plt.hist(beats_max_value_list, bins=1000)
+    # plt.title('ECG beats Max values histogram')
+    # plt.plot([beats_max_mean_value, beats_max_mean_value], [0, 1000], 'r')
+    # plt.plot([beats_max_median_value, beats_max_median_value], [0, 1000], 'g')
+    # plt.legend(('mean', 'median'))
+    # plt.show()
+    #
+    # plt.hist(noise_max_value_list, bins=1000)
+    # plt.plot([noise_max_mean_value, noise_max_mean_value], [0, 50], 'r')
+    # plt.plot([noise_max_std_value, noise_max_std_value], [0, 50], 'g')
+    # plt.title('Noise 512 samples split Max values histogram')
+    # plt.legend(('mean', 'std'))
+    # plt.show()
+
+
+    Ase = noise_max_mean_value / beats_max_median_value
+
+    # According to Friesen and collaborator BLW due to electrode movement can be up to 5 times higher that the R peark
+    # Friesen, G. M., Jannett, T. C., Jadallah, M. A., Yates, S. L., Quint, S. R., & Nagle, H. T. (1990).
+    # A comparison of the noise sensitivity of nine QRS detection algorithms.
+    # IEEE Transactions on biomedical engineering, 37(1), 85-98.
+
+    alpha = 5 / Ase
+
     sn_train = []
     sn_test = []
 
@@ -137,7 +172,7 @@ def Data_Preparation():
 
     for s in beats_train:
 
-        signal_noise = s + noise_train[noise_index:noise_index + samples]
+        signal_noise = s + alpha * noise_train[noise_index:noise_index + samples]
 
         sn_train.append(signal_noise)
 
@@ -150,7 +185,7 @@ def Data_Preparation():
 
     for s in beats_test:
 
-        signal_noise = s + noise_test[noise_index:noise_index + samples]
+        signal_noise = s + alpha * noise_test[noise_index:noise_index + samples]
 
         sn_test.append(signal_noise)
 
