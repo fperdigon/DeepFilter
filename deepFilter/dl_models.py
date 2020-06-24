@@ -302,7 +302,7 @@ def deep_filter_I_linear():
     tensor = LFilter_module(tensor, 16)
     tensor = LFilter_module(tensor, 16)
     predictions = Conv1D(filters=1,
-                         kernel_size=10,
+                         kernel_size=9,
                          activation='linear',
                          strides=1,
                          padding='same')(tensor)
@@ -323,7 +323,7 @@ def deep_filter_I_Nlinear():
     tensor = NLFilter_module(tensor, 16)
     tensor = NLFilter_module(tensor, 16)
     predictions = Conv1D(filters=1,
-                         kernel_size=10,
+                         kernel_size=9,
                          activation='linear',
                          strides=1,
                          padding='same')(tensor)
@@ -351,7 +351,7 @@ def deep_filter_I_LANL():
     tensor = LANLFilter_module(tensor, 16)
     tensor = BatchNormalization()(tensor)
     predictions = Conv1D(filters=1,
-                    kernel_size=10,
+                    kernel_size=9,
                     activation='linear',
                     strides=1,
                     padding='same')(tensor)
@@ -379,7 +379,7 @@ def deep_filter_model_I_LANL_dilated():
     tensor = LANLFilter_module_dilated(tensor, 16)
     tensor = BatchNormalization()(tensor)
     predictions = Conv1D(filters=1,
-                    kernel_size=10,
+                    kernel_size=9,
                     activation='linear',
                     strides=1,
                     padding='same')(tensor)
