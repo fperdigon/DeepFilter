@@ -26,8 +26,8 @@ if __name__ == "__main__":
                       'FCN-DAE',
                       'Vanilla L',
                       'Vanilla NL',
-                      'Inception-like LANL',
-                      'Inception-like LANLD'
+                      'Multibranch LANL',
+                      'Multibranch LANLD'
                       ]
 
 
@@ -94,13 +94,13 @@ if __name__ == "__main__":
     with open('test_results_' + dl_experiments[3] +'.pkl', 'rb') as input:
         test_Vanilla_NL = pickle.load(input)
 
-    # Load Results Inception-like LANL
+    # Load Results Multibranch LANL
     with open('test_results_' + dl_experiments[4] +'.pkl', 'rb') as input:
-        test_Inception_like_LANL = pickle.load(input)
+        test_Multibranch_LANL = pickle.load(input)
 
-    # Load Results Inception-like LANLD
+    # Load Results Multibranch LANLD
     with open('test_results_' + dl_experiments[5] +'.pkl', 'rb') as input:
-        test_Inception_like_LANLD = pickle.load(input)
+        test_Multibranch_LANLD = pickle.load(input)
 
     # Load Result FIR Filter
     with open('test_results_FIR.pkl', 'rb') as input:
@@ -182,9 +182,9 @@ if __name__ == "__main__":
     RMSE_values_DL_exp_2 = RMSE(y_test, y_pred)
 
 
-    # Inception_like_LANL
+    # Multibranch_LANL
 
-    [X_test, y_test, y_pred] = test_Inception_like_LANL
+    [X_test, y_test, y_pred] = test_Multibranch_LANL
 
     SSD_values_DL_exp_3 = SSD(y_test, y_pred)
 
@@ -197,9 +197,9 @@ if __name__ == "__main__":
     RMSE_values_DL_exp_3 = RMSE(y_test, y_pred)
 
 
-    # Inception_like_LANLD
+    # Multibranch_LANLD
 
-    [X_test, y_test, y_pred] = test_Inception_like_LANLD
+    [X_test, y_test, y_pred] = test_Multibranch_LANLD
 
     SSD_values_DL_exp_4 = SSD(y_test, y_pred)
 

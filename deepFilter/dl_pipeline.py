@@ -72,25 +72,25 @@ def train_dl(Dataset, experiment):
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'Vanilla_NL'
 
-    if experiment == 'Inception-like L':
-        # Inception-like linear
+    if experiment == 'Multibranch L':
+        # Multibranch linear
         model = models.deep_filter_I_linear()
-        model_label = 'Inception-like_L'
+        model_label = 'Multibranch_L'
 
-    if experiment == 'Inception-like NL':
-        # Inception-like non linear
+    if experiment == 'Multibranch NL':
+        # Multibranch non linear
         model = models.deep_filter_I_Nlinear()
-        model_label = 'Inception-like_NL'
+        model_label = 'Multibranch_NL'
 
-    if experiment == 'Inception-like LANL':
-        # Inception-like linear and non linear
+    if experiment == 'Multibranch LANL':
+        # Multibranch linear and non linear
         model = models.deep_filter_I_LANL()
-        model_label = 'Inception-like_LANL'
+        model_label = 'Multibranch_LANL'
 
-    if experiment == 'Inception-like LANLD':
+    if experiment == 'Multibranch LANLD':
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
-        model_label = 'Inception-like_LANLD'
+        model_label = 'Multibranch_LANLD'
 
 
     print('\n ' + model_label + '\n ')
@@ -204,25 +204,25 @@ def test_dl(Dataset, experiment):
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'Vanilla_NL'
 
-    if experiment == 'Inception-like L':
-        # Inception-like linear
+    if experiment == 'Multibranch L':
+        # Multibranch linear
         model = models.deep_filter_I_linear()
-        model_label = 'Inception-like_L'
+        model_label = 'Multibranch_L'
 
-    if experiment == 'Inception-like NL':
-        # Inception-like non linear
+    if experiment == 'Multibranch NL':
+        # Multibranch non linear
         model = models.deep_filter_I_Nlinear()
-        model_label = 'Inception-like_NL'
+        model_label = 'Multibranch_NL'
 
-    if experiment == 'Inception-like LANL':
-        # Inception-like linear and non linear
+    if experiment == 'Multibranch LANL':
+        # Multibranch linear and non linear
         model = models.deep_filter_I_LANL()
-        model_label = 'Inception-like_LANL'
+        model_label = 'Multibranch_LANL'
 
-    if experiment == 'Inception-like LANLD':
+    if experiment == 'Multibranch LANLD':
         # Inception-like linear and non linear dilated
         model = models.deep_filter_model_I_LANL_dilated()
-        model_label = 'Inception-like_LANLD'
+        model_label = 'Multibranch_LANLD'
 
     print('\n ' + model_label + '\n ')
 
