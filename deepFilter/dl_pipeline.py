@@ -22,10 +22,6 @@ import deepFilter.dl_models as models
 def ssd_loss(y_true, y_pred):
     return K.sum(K.square(y_pred - y_true), axis=-2)
 
-# Custom loss SSD
-def ssd_v2_loss(y_true, y_pred):
-    return K.sum(K.square(y_pred - y_true)/(y_true*10 + 30), axis=-2) * 10 + K.sum(K.square(y_pred - y_true), axis=-2)
-
 # Combined loss SSD + MSE
 def combined_ssd_mse_loss(y_true, y_pred):
     return K.mean(K.square(y_true - y_pred), axis=-2) * 500 + K.sum(K.square(y_true - y_pred), axis=-2)
@@ -63,14 +59,6 @@ def train_dl(Dataset, experiment):
 
     if experiment == 'DRNN':
         # DRNN
-
-        # # reshape from [samples, timesteps] into [samples, timesteps, features]
-        # n_features = 1
-        # X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], n_features))
-        # y_train = y_train.reshape((y_train.shape[0], y_train.shape[1], n_features))
-        # X_val = X_val.reshape((X_val.shape[0], X_val.shape[1], n_features))
-        # y_val = y_val.reshape((y_val.shape[0], y_val.shape[1], n_features))
-
         model = models.DRRN_denoising()
         model_label = 'DRNN'
 
@@ -116,19 +104,21 @@ def train_dl(Dataset, experiment):
     # lr = 1e-4
     minimum_lr = 1e-10
 
-    if experiment == 'DRNN' or experiment == 'FCN-DAE':
-        model.compile(loss=ssd_loss,
-                      # optimizer=keras.optimizers.Adadelta(),
-                      optimizer=keras.optimizers.Adam(lr=lr),
-                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+
+    # Loss function selection according to method implementation
+    if experiment == 'DRNN':
+        criterion = 'mse'
+
+    elif experiment == 'FCN-DAE':
+        criterion = ssd_loss
 
     else:
-        model.compile(loss=combined_ssd_mad_loss,
-                      # optimizer=keras.optimizers.Adadelta(),
-                      optimizer=keras.optimizers.Adam(lr=lr),
-                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+        criterion = combined_ssd_mad_loss
+
+
+    model.compile(loss=criterion,
+                  optimizer=keras.optimizers.Adam(lr=lr),
+                  metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # Keras Callbacks
 
@@ -157,8 +147,6 @@ def train_dl(Dataset, experiment):
                                verbose=1)
 
     tb_log_dir = './runs/' + model_label
-    # if os.path.isdir(tb_log_dir): # remove the old TB dir
-    #     shutil.rmtree(tb_log_dir, ignore_errors=True)
 
     tboard = TensorBoard(log_dir=tb_log_dir, histogram_freq=0,
                          write_graph=False, write_grads=False,
@@ -240,25 +228,18 @@ def test_dl(Dataset, experiment):
 
     model.summary()
 
-    if experiment == 'FCN-DAE':
-        model.compile(loss=ssd_loss,
-                      # optimizer=keras.optimizers.Adadelta(),
-                      optimizer=keras.optimizers.Adam(lr=0.1),
-                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+    # Loss function selection according to method implementation
+    if experiment == 'DRNN':
+        criterion = 'mse'
 
-    elif experiment == 'DRNN':
-        model.compile(loss=losses.mean_squared_error,
-                      # optimizer=keras.optimizers.Adadelta(),
-                      optimizer=keras.optimizers.Adam(lr=0.1),
-                      # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
-                      metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
+    elif experiment == 'FCN-DAE':
+        criterion = ssd_loss
 
     else:
-        model.compile(loss=combined_ssd_mad_loss,
-                  # optimizer=keras.optimizers.Adadelta(),
-                  optimizer=keras.optimizers.Adam(lr=0.1),
-                  # optimizer=keras.optimizers.SGD(lr=lr, momentum=0.9, decay=decay, nesterov=False),
+        criterion = combined_ssd_mad_loss
+
+    model.compile(loss=criterion,
+                  optimizer=keras.optimizers.Adam(lr=0.01),
                   metrics=[losses.mean_squared_error, losses.mean_absolute_error, ssd_loss, mad_loss])
 
     # checkpoint
