@@ -29,7 +29,6 @@ def PRD(y, y_pred):
 
 
 def COS_SIM(y, y_pred):
-
     cos_sim = []
 
     y = np.squeeze(y, axis=-1)
@@ -42,6 +41,4 @@ def COS_SIM(y, y_pred):
     cos_sim = np.array(cos_sim)
     return cos_sim
 
-def RMSE(y, y_pred):
-    return np.mean(np.sqrt(np.square(y - y_pred)), axis=1)
 

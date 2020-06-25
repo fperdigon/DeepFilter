@@ -13,7 +13,7 @@
 
 import _pickle as pickle
 
-from utils.metrics import MAD, SSD, PRD, COS_SIM, RMSE
+from utils.metrics import MAD, SSD, PRD, COS_SIM
 from utils import visualization as vs
 from utils import data_preparation as dp
 
@@ -134,8 +134,6 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_DRNN = COS_SIM(y_test, y_pred)
 
-    RMSE_values_DL_DRNN = RMSE(y_test, y_pred)
-
 
     # Exp FCN-DAE
 
@@ -148,8 +146,6 @@ if __name__ == "__main__":
     PRD_values_DL_FCN_DAE = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_FCN_DAE = COS_SIM(y_test, y_pred)
-
-    RMSE_values_DL_FCN_DAE = RMSE(y_test, y_pred)
 
 
     # Vanilla L
@@ -164,8 +160,6 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_1 = COS_SIM(y_test, y_pred)
 
-    RMSE_values_DL_exp_1 = RMSE(y_test, y_pred)
-
 
     # Vanilla_NL
 
@@ -178,8 +172,6 @@ if __name__ == "__main__":
     PRD_values_DL_exp_2 = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_exp_2 = COS_SIM(y_test, y_pred)
-
-    RMSE_values_DL_exp_2 = RMSE(y_test, y_pred)
 
 
     # Multibranch_LANL
@@ -194,8 +186,6 @@ if __name__ == "__main__":
 
     COS_SIM_values_DL_exp_3 = COS_SIM(y_test, y_pred)
 
-    RMSE_values_DL_exp_3 = RMSE(y_test, y_pred)
-
 
     # Multibranch_LANLD
 
@@ -208,8 +198,6 @@ if __name__ == "__main__":
     PRD_values_DL_exp_4 = PRD(y_test, y_pred)
 
     COS_SIM_values_DL_exp_4 = COS_SIM(y_test, y_pred)
-
-    RMSE_values_DL_exp_4 = RMSE(y_test, y_pred)
 
 
 
@@ -231,7 +219,6 @@ if __name__ == "__main__":
 
     COS_SIM_values_FIR = COS_SIM(y_test, y_filter)
 
-    RMSE_values_FIR = RMSE(y_test, y_pred)
 
     # IIR Filtering Metrics (Best)
     [X_test, y_test, y_filter] = test_IIR
@@ -243,8 +230,6 @@ if __name__ == "__main__":
     PRD_values_IIR = PRD(y_test, y_filter)
 
     COS_SIM_values_IIR = COS_SIM(y_test, y_filter)
-
-    RMSE_values_IIR = RMSE(y_test, y_pred)
 
     for id in signals_id:
         fil_signals2plot.append(y_filter[id])
@@ -281,15 +266,6 @@ if __name__ == "__main__":
                PRD_values_DL_exp_4,
                ]
 
-    RMSE_all = [RMSE_values_FIR,
-                RMSE_values_IIR,
-                RMSE_values_DL_FCN_DAE,
-                RMSE_values_DL_DRNN,
-                RMSE_values_DL_exp_1,
-                RMSE_values_DL_exp_2,
-                RMSE_values_DL_exp_3,
-                RMSE_values_DL_exp_4,
-                ]
 
     CORR_all = [COS_SIM_values_FIR,
                 COS_SIM_values_IIR,
@@ -305,14 +281,13 @@ if __name__ == "__main__":
     Exp_names = ['FIR Filter', 'IIR Filter'] + dl_experiments
     
     metrics = ['SSD', 'MAD', 'PRD', 'RMSE', 'COS_SIM']
-    metric_values = [SSD_all, MAD_all, PRD_all, RMSE_all, CORR_all]
+    metric_values = [SSD_all, MAD_all, PRD_all, CORR_all]
 
     vs.generate_table(metrics, metric_values, Exp_names)
 
-    vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 41))
-    vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 2))
+    vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 100.1))
+    vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 3.01))
     vs.generate_hboxplot(PRD_all, Exp_names, 'PRD (au)', log=False)
-    vs.generate_hboxplot(RMSE_all, Exp_names, 'RMSE (au)', log=False)
     vs.generate_hboxplot(CORR_all, Exp_names, 'Cosine Similarity (0-1)', log=False, set_x_axis_size=(0, 1))
 
     # Visualize signals
