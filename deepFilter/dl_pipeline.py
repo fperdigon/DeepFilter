@@ -107,7 +107,7 @@ def train_dl(Dataset, experiment):
 
     # Loss function selection according to method implementation
     if experiment == 'DRNN':
-        criterion = 'mse'
+        criterion = keras.losses.mean_squared_error
 
     elif experiment == 'FCN-DAE':
         criterion = ssd_loss
@@ -230,7 +230,7 @@ def test_dl(Dataset, experiment):
 
     # Loss function selection according to method implementation
     if experiment == 'DRNN':
-        criterion = 'mse'
+        criterion = keras.losses.mean_squared_error
 
     elif experiment == 'FCN-DAE':
         criterion = ssd_loss

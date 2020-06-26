@@ -12,6 +12,7 @@
 #===========================================================
 
 import _pickle as pickle
+from datetime import datetime
 
 from utils.metrics import MAD, SSD, PRD, COS_SIM
 from utils import visualization as vs
@@ -19,6 +20,8 @@ from utils import data_preparation as dp
 
 from digitalFilters.dfilters import FIR_test_Dataset, IIR_test_Dataset
 from deepFilter.dl_pipeline import train_dl, test_dl
+
+
 
 if __name__ == "__main__":
 
@@ -31,52 +34,83 @@ if __name__ == "__main__":
                       ]
 
 
-    if True:
-        Dataset = dp.Data_Preparation()
-        
-        # Save dataset
-        with open('dataset.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(Dataset, output)
-        print('Dataset saved')
-        
-        # Load dataset
-        with open('dataset.pkl', 'rb') as input:
-            Dataset = pickle.load(input)
 
-        for experiment in range(len(dl_experiments)):
+    Dataset = dp.Data_Preparation()
 
-            train_dl(Dataset, dl_experiments[experiment])
+    # Save dataset
+    with open('dataset.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(Dataset, output)
+    print('Dataset saved')
 
-            [X_test, y_test, y_pred] = test_dl(Dataset, dl_experiments[experiment])
-
-            test_results = [X_test, y_test, y_pred]
-
-            # Save Results
-            with open('test_results_' + dl_experiments[experiment] +'.pkl', 'wb') as output:  # Overwrites any existing file.
-                pickle.dump(test_results, output)
-            print('Results from experiment ' + dl_experiments[experiment] + ' saved')
+    # Load dataset
+    with open('dataset.pkl', 'rb') as input:
+        Dataset = pickle.load(input)
 
 
-        [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+    train_time_list = []
+    test_time_list = []
 
-        test_results_FIR = [X_test_f, y_test_f, y_filter]
+    for experiment in range(len(dl_experiments)):
+        start_train = datetime.now()
+        train_dl(Dataset, dl_experiments[experiment])
+        end_train = datetime.now()
+        train_time_list.append(end_train - start_train)
 
-        # Save FIR filter results
-        with open('test_results_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results_FIR, output)
-        print('Results from experiment FIR filter saved')
+        start_test = datetime.now()
+        [X_test, y_test, y_pred] = test_dl(Dataset, dl_experiments[experiment])
+        end_test = datetime.now()
+        test_time_list.append(end_test - start_test)
 
-        [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
+        test_results = [X_test, y_test, y_pred]
 
-        test_results_IIR = [X_test_f, y_test_f, y_filter]
+        # Save Results
+        with open('test_results_' + dl_experiments[experiment] +'.pkl', 'wb') as output:  # Overwrites any existing file.
+            pickle.dump(test_results, output)
+        print('Results from experiment ' + dl_experiments[experiment] + ' saved')
 
-        # Save IIR filter results
-        with open('test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
-            pickle.dump(test_results_IIR, output)
-        print('Results from experiment IIR filter saved')
+    # Classical Filters
+
+    # FIR
+    start_test = datetime.now()
+    [X_test_f, y_test_f, y_filter] = FIR_test_Dataset(Dataset)
+    end_test = datetime.now()
+    train_time_list.append(0)
+    test_time_list.append(end_test - start_test)
+
+    test_results_FIR = [X_test_f, y_test_f, y_filter]
+
+    # Save FIR filter results
+    with open('test_results_FIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_FIR, output)
+    print('Results from experiment FIR filter saved')
+
+    # IIR
+    start_test = datetime.now()
+    [X_test_f, y_test_f, y_filter] = IIR_test_Dataset(Dataset)
+    end_test = datetime.now()
+    train_time_list.append(0)
+    test_time_list.append(end_test - start_test)
+
+    test_results_IIR = [X_test_f, y_test_f, y_filter]
+
+    # Save IIR filter results
+    with open('test_results_IIR.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(test_results_IIR, output)
+    print('Results from experiment IIR filter saved')
+
+    # Saving timing list
+    timing = [train_time_list, test_time_list]
+    with open('timing.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(timing, output)
+    print('Timing saved')
 
 
     ####### LOAD EXPERIMENTS #######
+
+    # Load timing
+    with open('timing.pkl', 'rb') as input:
+        timing = pickle.load(input)
+        [train_time_list, test_time_list] = timing
 
     # Load Results DRNN
     with open('test_results_' + dl_experiments[0] + '.pkl', 'rb') as input:
@@ -280,10 +314,15 @@ if __name__ == "__main__":
 
     Exp_names = ['FIR Filter', 'IIR Filter'] + dl_experiments
     
-    metrics = ['SSD', 'MAD', 'PRD', 'RMSE', 'COS_SIM']
+    metrics = ['SSD', 'MAD', 'PRD', 'COS_SIM']
     metric_values = [SSD_all, MAD_all, PRD_all, CORR_all]
 
+    # Metrics table
     vs.generate_table(metrics, metric_values, Exp_names)
+
+    # Timing table
+    timing_var = ['training', 'test']
+    vs.generate_table(timing_var, timing, Exp_names)
 
     vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 100.1))
     vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 3.01))
