@@ -24,13 +24,13 @@
 import numpy as np
 import wfdb
 
-Path = 'mit-bih-noise-stress-test-database-1.0.0/bw'
-signals,fields = wfdb.rdsamp(Path)
+def prepare(NSTDBPath='data/mit-bih-noise-stress-test-database-1.0.0/bw'):
+    signals, fields = wfdb.rdsamp(NSTDBPath)
 
-for key in fields:
-    print(key,fields[key])
+    for key in fields:
+        print(key, fields[key])
 
-np.save('NoiseBWL',signals)
-print('=========================================================')
-print('Sucessful MIT BIH data noise stress database saved as npy')
+    np.save('NoiseBWL', signals)
+    print('=========================================================')
+    print('MIT BIH data noise stress test database (NSTDB) saved as npy')
 
