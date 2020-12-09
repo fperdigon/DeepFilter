@@ -11,22 +11,30 @@
 
 import scipy.io as sio
 import numpy as np
-
+import _pickle as pickle
+from Data_Preparation import Prepare_QTDatabase, Prepare_NSTDB
 
 def Data_Preparation():
 
     print('Getting the Data ready ... ')
 
-    qtdatabase = sio.loadmat('QTDatabase.mat')
-    nstd = sio.loadmat('NoiseBWL.mat')
+    Prepare_QTDatabase.prepare()
+    Prepare_NSTDB.prepare()
 
+    # Load QT Database
+    with open('data/QTDatabase.pkl', 'rb') as input:
+        qtdb = pickle.load(input)
+
+    # Load NSTDB
+    with open('data/NoiseBWL.pkl', 'rb') as input:
+        nstd = pickle.load(input)
 
     #####################################
-    # NSTD
+    # NSTDB
     #####################################
 
-    noise_channel1 = nstd['NoiseBWL']['channel1'][0, 0]
-    noise_channel2 = nstd['NoiseBWL']['channel2'][0, 0]
+    noise_channel1 = nstd[:, 0]
+    noise_channel2 = nstd[:, 1]
 
 
 
