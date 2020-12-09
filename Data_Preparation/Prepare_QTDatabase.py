@@ -48,7 +48,7 @@ def prepare(QTpath='data/qt-database-1.0.0/'):
 
         # reading signals
         aux = i.split('.dat')
-        signal,fields = wfdb.rdsamp(aux[0])
+        signal, fields = wfdb.rdsamp(aux[0])
         qu = len(signal)
 
         # reading annotations
@@ -86,11 +86,9 @@ def prepare(QTpath='data/qt-database-1.0.0/'):
         # two beats based on QRS annotations
         beats = list()
         for k in range(len(Pstart)-1):
-            remove = (Ridx>Pstart[k]) & (Ridx<Pstart[k+1])
-            if np.sum(remove)<2:
+            remove = (Ridx > Pstart[k]) & (Ridx < Pstart[k+1])
+            if np.sum(remove) < 2:
                 beats.append(auxSig[Pstart[k]:Pstart[k+1]])
-
-        # plt.plot(beats[0])
 
         # Creating the list that will contain each beat per signal
         beatsRe = list()
