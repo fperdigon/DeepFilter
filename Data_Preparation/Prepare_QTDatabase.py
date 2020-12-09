@@ -32,6 +32,7 @@ import numpy as np
 from scipy.signal import resample_poly
 import wfdb
 import math
+import _pickle as pickle
 
 
 def prepare(QTpath='data/qt-database-1.0.0/'):
@@ -42,12 +43,14 @@ def prepare(QTpath='data/qt-database-1.0.0/'):
     namesPath = glob.glob(QTpath + "/*.dat")
 
     # final list that will contain all signals and beats processed
-    QTDatabaseSignals = list()
+    QTDatabaseSignals = dict()
 
+    register_name = None
     for i in namesPath:
 
         # reading signals
         aux = i.split('.dat')
+        register_name = aux[0].split('/')[-1]
         signal, fields = wfdb.rdsamp(aux[0])
         qu = len(signal)
 
@@ -105,9 +108,11 @@ def prepare(QTpath='data/qt-database-1.0.0/'):
             beatsRe.append(res)
 
         # storing all beats in each corresponding signal, list of list
-        QTDatabaseSignals.append(beatsRe)
+        QTDatabaseSignals[register_name] = beatsRe
 
-    np.save('QTDatabase', QTDatabaseSignals)
+    # Save Data
+    with open('data/QTDatabase.pkl', 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(QTDatabaseSignals, output)
     print('=========================================================')
     print('MIT QT database saved as npy')
         
