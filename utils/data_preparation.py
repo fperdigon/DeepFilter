@@ -154,7 +154,7 @@ def Data_Preparation():
 
     for s in beats_test:
 
-        noise = noise_train[noise_index:noise_index + samples]
+        noise = noise_test[noise_index:noise_index + samples]
 
         beat_max_value = np.max(s) - np.min(s)
 
@@ -181,6 +181,7 @@ def Data_Preparation():
     X_test = np.array(sn_test)
     y_test = np.array(beats_test)
 
+    # Expand diemsions to meet Keras input shape requirements
     X_train = np.expand_dims(X_train, axis=2)
     y_train = np.expand_dims(y_train, axis=2)
 

@@ -39,7 +39,7 @@ def Conv1DTranspose(input_tensor, filters, kernel_size, strides=2, activation='r
 def NN_Model():
 
     model = Sequential()
-    model.add(Dense(300, input_dim=512, activation='relu'))
+    model.add(Dense(300, input_dim=None, activation='relu'))
     model.add(Dense(300, activation='relu'))
     model.add(Dense(300, activation='relu'))
     model.add(Dense(1, activation='linear'))
@@ -201,7 +201,7 @@ def deep_filter_vanilla_linear():
     model.add(Conv1D(filters=64,
                      kernel_size=9,
                      activation='linear',
-                     input_shape=(512, 1),
+                     input_shape=(None, 1),
                      strides=1,
                      padding='same'))
     model.add(Conv1D(filters=64,
@@ -249,7 +249,7 @@ def deep_filter_vanilla_Nlinear():
     model.add(Conv1D(filters=64,
                      kernel_size=9,
                      activation='relu',
-                     input_shape=(512, 1),
+                     input_shape=(None, 1),
                      strides=1,
                      padding='same'))
     model.add(Conv1D(filters=64,
@@ -292,7 +292,7 @@ def deep_filter_vanilla_Nlinear():
 
 
 def deep_filter_I_linear():
-    input_shape = (512, 1)
+    input_shape = (None, 1)
     input = Input(shape=input_shape)
 
     tensor = LFilter_module(input, 64)
@@ -313,7 +313,7 @@ def deep_filter_I_linear():
 
 
 def deep_filter_I_Nlinear():
-    input_shape = (512, 1)
+    input_shape = (None, 1)
     input = Input(shape=input_shape)
 
     tensor = NLFilter_module(input, 64)
@@ -335,7 +335,7 @@ def deep_filter_I_Nlinear():
 def deep_filter_I_LANL():
     # TODO: Make the doc
 
-    input_shape = (512, 1)
+    input_shape = (None, 1)
     input = Input(shape=input_shape)
 
     tensor = LANLFilter_module(input, 64)
@@ -363,7 +363,7 @@ def deep_filter_I_LANL():
 def deep_filter_model_I_LANL_dilated():
     # TODO: Make the doc
 
-    input_shape = (512, 1)
+    input_shape = (None, 1)
     input = Input(shape=input_shape)
 
     tensor = LANLFilter_module(input, 64)
@@ -394,11 +394,11 @@ def FCN_DAE():
     # Noise reduction in ECG signals using fully convolutional denoising autoencoders.
     # IEEE Access, 7, 60806-60813.
 
-    input_shape = (512, 1)
+    input_shape = (None, 1)
     input = Input(shape=input_shape)
 
     x = Conv1D(filters=40,
-               input_shape=(512, 1),
+               input_shape=(None, 1),
                kernel_size=16,
                activation='elu',
                strides=2,
@@ -519,19 +519,8 @@ def DRRN_denoising():
     # Antczak, K. (2018). Deep recurrent neural networks for ECG signal denoising.
     # arXiv preprint arXiv:1807.11551.
 
-    # input_shape = (512, 1)
-    # input = Input(shape=input_shape)
-    #
-    # # x = Reshape(target_shape=(512, 1, 1))(input)
-    # # x = LSTM(64, input_shape=(512,1))(x)
-    # x = LSTM(64, input_shape=(512, 1), return_sequences=True)(input)
-    # x = Dense(64, activation='relu')(x)
-    # x = Dense(64, activation='relu')(x)
-    # predictions = Dense(512, activation='linear')(x)
-    # model = Model(inputs=[input], outputs=predictions)
-
     model = Sequential()
-    model.add(LSTM(64, input_shape=(512, 1), return_sequences=True))
+    model.add(LSTM(64, input_shape=(None, 1), return_sequences=True))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(64, activation='relu'))
     model.add(Dense(1, activation='linear'))

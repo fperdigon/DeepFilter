@@ -29,7 +29,6 @@ def combined_ssd_mse_loss(y_true, y_pred):
 def combined_ssd_mad_loss(y_true, y_pred):
     return K.max(K.square(y_true - y_pred), axis=-2) * 50 + K.sum(K.square(y_true - y_pred), axis=-2)
 
-
 # Custom loss SAD
 def sad_loss(y_true, y_pred):
     return K.sum(K.sqrt(K.square(y_pred - y_true)), axis=-2)
@@ -126,13 +125,13 @@ def train_dl(Dataset, experiment):
     model_filepath = model_label + '_weights.best.hdf5'
 
     checkpoint = ModelCheckpoint(model_filepath,
-                                 monitor='ssd_loss',
+                                 monitor="val_loss",
                                  verbose=1,
                                  save_best_only=True,
                                  mode='min',  # on acc has to go max
                                  save_weights_only=True)
 
-    reduce_lr = ReduceLROnPlateau(monitor='ssd_loss',
+    reduce_lr = ReduceLROnPlateau(monitor="val_loss",
                                   factor=0.5,
                                   min_delta=0.05,
                                   mode='min',  # on acc has to go max
@@ -140,7 +139,7 @@ def train_dl(Dataset, experiment):
                                   min_lr=minimum_lr,
                                   verbose=1)
 
-    early_stop = EarlyStopping(monitor="ssd_loss",  # "val_loss"
+    early_stop = EarlyStopping(monitor="val_loss",  # "val_loss"
                                min_delta=0.05,
                                mode='min',  # on acc has to go max
                                patience=10,
@@ -230,7 +229,7 @@ def test_dl(Dataset, experiment):
 
     # Loss function selection according to method implementation
     if experiment == 'DRNN':
-        criterion = keras.losses.mean_squared_error
+        criterion = 'mse'
 
     elif experiment == 'FCN-DAE':
         criterion = ssd_loss
