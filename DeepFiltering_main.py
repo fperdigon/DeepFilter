@@ -37,12 +37,12 @@ if __name__ == "__main__":
     Dataset = dp.Data_Preparation()
 
     # Save dataset
-    with open('dataset.pkl', 'wb') as output:  # Overwrites any existing file.
+    with open('data/dataset.pkl', 'wb') as output:  # Overwrites any existing file.
         pickle.dump(Dataset, output)
     print('Dataset saved')
 
     # Load dataset
-    with open('dataset.pkl', 'rb') as input:
+    with open('data/dataset.pkl', 'rb') as input:
         Dataset = pickle.load(input)
 
 

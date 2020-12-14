@@ -5,6 +5,7 @@
 /run*/*
 deepFilter/__pycache__/*
 utils/__pycache__/*
+/data/*
 
 # Files to ignore
 *.pyc
@@ -14,5 +15,6 @@ utils/__pycache__/*
 *.pkl
 *.gz
 *.mat
+*.zip
 tes*
 .directory
