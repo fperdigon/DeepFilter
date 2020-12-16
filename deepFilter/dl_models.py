@@ -36,18 +36,6 @@ def Conv1DTranspose(input_tensor, filters, kernel_size, strides=2, activation='r
     x = Lambda(lambda x: K.squeeze(x, axis=2))(x)
     return x
 
-def NN_Model():
-
-    model = Sequential()
-    model.add(Dense(300, input_dim=512, activation='relu'))
-    model.add(Dense(300, activation='relu'))
-    model.add(Dense(300, activation='relu'))
-    model.add(Dense(1, activation='linear'))
-
-    #model.add(Dense(1, activation='sigmoid'))
-    return model
-
-
 ##########################################################################
 
 ###### MODULES #######
@@ -75,9 +63,10 @@ def LFilter_module(x, layers):
                 padding='same')(x)
 
 
-    x = concatenate([LB1, LB1, LB2, LB3])
+    x = concatenate([LB0, LB1, LB2, LB3])
 
     return x
+
 
 def NLFilter_module(x, layers):
 
@@ -106,6 +95,7 @@ def NLFilter_module(x, layers):
     x = concatenate([NLB0, NLB1, NLB2, NLB3])
 
     return x
+
 
 def LANLFilter_module(x, layers):
     LB0 = Conv1D(filters=int(layers / 8),
@@ -154,6 +144,7 @@ def LANLFilter_module(x, layers):
 
     return x
 
+
 def LANLFilter_module_dilated(x, layers):
     LB1 = Conv1D(filters=int(layers / 6),
                 kernel_size=5,
@@ -191,6 +182,7 @@ def LANLFilter_module_dilated(x, layers):
     # x = BatchNormalization()(x)
 
     return x
+
 
 ###### MODELS #######
 
@@ -332,6 +324,7 @@ def deep_filter_I_Nlinear():
 
     return model
 
+
 def deep_filter_I_LANL():
     # TODO: Make the doc
 
@@ -360,6 +353,7 @@ def deep_filter_I_LANL():
 
     return model
 
+
 def deep_filter_model_I_LANL_dilated():
     # TODO: Make the doc
 
@@ -387,6 +381,7 @@ def deep_filter_model_I_LANL_dilated():
     model = Model(inputs=[input], outputs=predictions)
 
     return model
+
 
 def FCN_DAE():
     # Implementation of FCN_DAE approach presented in
@@ -511,7 +506,6 @@ def FCN_DAE():
 
     model = Model(inputs=[input], outputs=predictions)
     return model
-
 
 
 def DRRN_denoising():
