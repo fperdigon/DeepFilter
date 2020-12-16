@@ -21,7 +21,6 @@ def generate_violinplots(np_data, description, ylabel, log):
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
-
     # Set up the matplotlib figure
 
     f, ax = plt.subplots()
@@ -32,7 +31,6 @@ def generate_violinplots(np_data, description, ylabel, log):
 
     if log:
         ax.set_yscale("log")
-        #ylabel = 'Log10( ' + ylabel + ' )'
 
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
@@ -48,7 +46,6 @@ def generate_barplot(np_data, description, ylabel, log):
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
-
     # Set up the matplotlib figure
 
     f, ax = plt.subplots()
@@ -59,7 +56,6 @@ def generate_barplot(np_data, description, ylabel, log):
 
     if log:
         ax.set_yscale("log")
-        #ylabel = 'Log10( ' + ylabel + ' )'
 
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
@@ -68,12 +64,12 @@ def generate_barplot(np_data, description, ylabel, log):
 
     #plt.savefig(store_folder + 'violinplot_fco' + info + description + '.png')
 
+
 def generate_boxplot(np_data, description, ylabel, log):
     # Process the results and store in Panda objects
     col = description
     loss_val_np = np.rot90(np_data)
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
-
 
     # Set up the matplotlib figure
 
@@ -85,12 +81,9 @@ def generate_boxplot(np_data, description, ylabel, log):
 
     if log:
         ax.set_yscale("log")
-        #ylabel = 'Log10( ' + ylabel + ' )'
 
     ax.set(xlabel='Models/Methods', ylabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
-
-
 
     plt.show()
 
@@ -104,7 +97,6 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
 
     pd_df = pd.DataFrame.from_records(loss_val_np, columns=col)
 
-
     # Set up the matplotlib figure
     sns.set(style="whitegrid")
 
@@ -114,16 +106,12 @@ def generate_hboxplot(np_data, description, ylabel, log, set_x_axis_size=None):
 
     if log:
         ax.set_xscale("log")
-        #ylabel = 'Log10( ' + ylabel + ' )'
 
     if set_x_axis_size != None:
         ax.set_xlim(set_x_axis_size)
 
-
     ax.set(ylabel='Models/Methods', xlabel=ylabel)
     ax = sns.despine(left=True, bottom=True)
-
-
 
     plt.show()
 
@@ -177,7 +165,6 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
 def generate_table(metrics, metric_values, Exp_names):
     # Print tabular results in the console, in a pretty way
-
     print('\n')
 
     tb = PrettyTable()
@@ -190,7 +177,7 @@ def generate_table(metrics, metric_values, Exp_names):
         tb_row = []
         tb_row.append(exp_name)
 
-        for metric in metric_values:
+        for metric in metric_values:   # metric_values[metric][model][beat]
             m_mean = np.mean(metric[ind])
             m_std = np.std(metric[ind])
             tb_row.append('{:.3f}'.format(m_mean) + ' (' + '{:.3f}'.format(m_std) + ')')
@@ -199,3 +186,40 @@ def generate_table(metrics, metric_values, Exp_names):
         ind += 1
 
     print(tb)
+
+
+def generate_table_time(column_names, all_values, Exp_names, gpu=True):
+    # Print tabular results in the console, in a pretty way
+
+    # The FIR and IIR are the last on all_values
+    # We need circular shift them to the right
+    all_values[0] = all_values[0][-2::] + all_values[0][0:-2]
+    all_values[1] = all_values[1][-2::] + all_values[1][0:-2]
+
+    print('\n')
+
+    tb = PrettyTable()
+    ind = 0
+
+    if gpu:
+        device = 'GPU'
+    else:
+        device = 'CPU'
+
+    for exp_name in Exp_names:
+        tb.field_names = ['Method/Model'] + [column_names[0] + '(' + device + ') h:m:s:ms'] + [
+            column_names[1] + '(' + device + ') h:m:s:ms']
+
+        tb_row = []
+        tb_row.append(exp_name)
+        tb_row.append(all_values[0][ind])
+        tb_row.append(all_values[1][ind])
+
+        tb.add_row(tb_row)
+
+        ind += 1
+
+    print(tb)
+
+    if gpu:
+        print('* For FIR and IIR Filters is CPU since scipy filters are CPU based implementations')
