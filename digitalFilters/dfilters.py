@@ -14,7 +14,6 @@ import numpy as np
 from scipy.signal import kaiserord, firwin, filtfilt, butter
 
 
-
 def FIRRemoveBL(ecgy, Fs, Fc, factor):
     
     #    ecgy:        the contamined signal (must be a list)
