@@ -13,14 +13,14 @@
 
 import _pickle as pickle
 from datetime import datetime
+import numpy as np
 
 from utils.metrics import MAD, SSD, PRD, COS_SIM
 from utils import visualization as vs
-from utils import data_preparation as dp
+from Data_Preparation import data_preparation as dp
 
 from digitalFilters.dfilters import FIR_test_Dataset, IIR_test_Dataset
 from deepFilter.dl_pipeline import train_dl, test_dl
-
 
 
 if __name__ == "__main__":
@@ -32,8 +32,6 @@ if __name__ == "__main__":
                       'Multibranch LANL',
                       'Multibranch LANLD'
                       ]
-
-
 
     Dataset = dp.Data_Preparation()
 
@@ -144,15 +142,10 @@ if __name__ == "__main__":
     with open('test_results_IIR.pkl', 'rb') as input:
         test_IIR = pickle.load(input)
 
+
     ####### Calculate Metrics #######
 
-    signals_id = [110, 210, 410, 810, 1610, 3210, 6410, 12810]
-
-    ecg_signals2plot = []
-    ecgbl_signals2plot = []
-    dl_signals2plot = []
-    fil_signals2plot = []
-
+    print('Calculating metrics ...')
 
     # DL Metrics
 
@@ -234,12 +227,6 @@ if __name__ == "__main__":
     COS_SIM_values_DL_exp_4 = COS_SIM(y_test, y_pred)
 
 
-
-    for id in signals_id:
-        ecgbl_signals2plot.append(X_test[id])
-        ecg_signals2plot.append(y_test[id])
-        dl_signals2plot.append(y_pred[id])
-
     # Digital Filtering
 
     # FIR Filtering Metrics
@@ -265,8 +252,6 @@ if __name__ == "__main__":
 
     COS_SIM_values_IIR = COS_SIM(y_test, y_filter)
 
-    for id in signals_id:
-        fil_signals2plot.append(y_filter[id])
 
     ####### Results Visualization #######
 
@@ -322,15 +307,37 @@ if __name__ == "__main__":
 
     # Timing table
     timing_var = ['training', 'test']
-    vs.generate_table(timing_var, timing, Exp_names)
+    vs.generate_table_time(timing_var, timing, Exp_names, gpu=True)
 
+    # Metrics graphs
     vs.generate_hboxplot(SSD_all, Exp_names, 'SSD (au)', log=False, set_x_axis_size=(0, 100.1))
     vs.generate_hboxplot(MAD_all, Exp_names, 'MAD (au)', log=False, set_x_axis_size=(0, 3.01))
-    vs.generate_hboxplot(PRD_all, Exp_names, 'PRD (au)', log=False)
+    vs.generate_hboxplot(PRD_all, Exp_names, 'PRD (au)', log=False, set_x_axis_size=(0, 100.1))
     vs.generate_hboxplot(CORR_all, Exp_names, 'Cosine Similarity (0-1)', log=False, set_x_axis_size=(0, 1))
 
+
     # Visualize signals
-    for i in range(len(signals_id)):
+
+    signals_index = np.array([110, 210, 410, 810, 1610, 3210, 6410, 12810]) + 10
+
+    ecg_signals2plot = []
+    ecgbl_signals2plot = []
+    dl_signals2plot = []
+    fil_signals2plot = []
+
+    signal_amount = 10
+
+    [X_test, y_test, y_pred] = test_Multibranch_LANLD
+    for id in signals_index:
+        ecgbl_signals2plot.append(X_test[id])
+        ecg_signals2plot.append(y_test[id])
+        dl_signals2plot.append(y_pred[id])
+
+    [X_test, y_test, y_filter] = test_IIR
+    for id in signals_index:
+        fil_signals2plot.append(y_filter[id])
+
+    for i in range(len(signals_index)):
         vs.ecg_view(ecg=ecg_signals2plot[i],
                     ecg_blw=ecgbl_signals2plot[i],
                     ecg_dl=dl_signals2plot[i],
