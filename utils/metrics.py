@@ -19,6 +19,7 @@ def SSD(y, y_pred):
 def MAD(y, y_pred):
     return np.max(np.abs(y - y_pred), axis=1) # axis 1 is the signal dimension
 
+
 def PRD(y, y_pred):
     N = np.sum(np.square(y_pred - y), axis=1)
     D = np.sum(np.square(y_pred - np.mean(y)), axis=1)
