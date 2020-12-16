@@ -9,7 +9,6 @@
 #
 #===========================================================
 
-import scipy.io as sio
 import numpy as np
 import _pickle as pickle
 from Data_Preparation import Prepare_QTDatabase, Prepare_NSTDB
@@ -18,11 +17,17 @@ def Data_Preparation():
 
     print('Getting the Data ready ... ')
 
+    # The seed is used to ensure the ECG always have the same contamination level
+    # this enhance reproducibility
+    seed = 1234
+    np.random.seed(seed=seed)
+
     Prepare_QTDatabase.prepare()
     Prepare_NSTDB.prepare()
 
     # Load QT Database
     with open('data/QTDatabase.pkl', 'rb') as input:
+        # dict {register_name: beats_list}
         qtdb = pickle.load(input)
 
     # Load NSTDB
@@ -37,13 +42,9 @@ def Data_Preparation():
     noise_channel2 = nstd[:, 1]
 
 
-
     #####################################
     # Data split
     #####################################
-    noise_channel1 = np.squeeze(noise_channel1, axis=1)
-    noise_channel2 = np.squeeze(noise_channel2, axis=1)
-    Full_Noise = np.concatenate((noise_channel2, noise_channel1))
 
     noise_test = np.concatenate(
         (noise_channel1[0:int(noise_channel1.shape[0] * 0.13)], noise_channel2[0:int(noise_channel2.shape[0] * 0.13)]))
@@ -91,43 +92,42 @@ def Data_Preparation():
                 'sel15814',  # Record from MIT-BIH Long-Term ECG Database
                 ]
 
+
+    # Creating the train and test dataset, each datapoint has 512 samples and is zero padded
+    # beats bigger that 512 samples are discarded to avoid wrong split beats ans to reduce
+    # computation.
     skip_beats = 0
     samples = 512
+    qtdb_keys = list(qtdb.keys())
 
-    for i in range(len(qtdatabase['QTDatabase']['Names'][0, 0][0])):
-        signal_name = qtdatabase['QTDatabase']['Names'][0, 0][0][i][0]
+    for i in range(len(qtdb_keys)):
+        signal_name = qtdb_keys[i]
 
-        for b in qtdatabase['QTDatabase']['signals'][0, 0][i][0]:
+        for b in qtdb[signal_name]:
 
             b_np = np.zeros(samples)
-            b_sq = np.squeeze(b[0], axis=1)
+            b_sq = np.array(b)
 
-            # There are beats with more than 512 samples (clould be up to 3500 samples)
+            # There are beats with more than 512 samples (could be up to 3500 samples)
             # Creating a threshold of 512 - init_padding samples max. gives a good compromise between
             # the samples amount and the discarded signals amount
             # before:
             # train: 74448  test: 13362
             # after:
-            # train: 71893 test: 13306
+            # train: 71893 test: 13306  (discarded train: ~4k datapoints test: ~50)
 
             init_padding = 16
             if b_sq.shape[0] > (samples - init_padding):
                 skip_beats += 1
-
                 continue
 
-            b_np[init_padding:b[0].shape[0] + init_padding] = b_sq - (b_sq[0] + b_sq[-1]) / 2
+            b_np[init_padding:b_sq.shape[0] + init_padding] = b_sq - (b_sq[0] + b_sq[-1]) / 2
 
-            if signal_name.split('.')[0] in test_set:
+            if signal_name in test_set:
                 beats_test.append(b_np)
             else:
                 beats_train.append(b_np)
 
-
-    sn_train = []
-    sn_test = []
-
-    noise_index = 0
 
     # Noise was added in a proportion from 0.2 to 2 times the ECG signal amplitude
     # Similar to
@@ -135,48 +135,37 @@ def Data_Preparation():
     # A noise stress test for arrhythmia detectors.
     # Computers in Cardiology, 381–384
 
-    for s in beats_train:
+    sn_train = []
+    sn_test = []
 
+    noise_index = 0
+
+    # Adding noise to train
+    rnd_train = np.random.randint(low=20, high=200, size=len(beats_train)) / 100
+    for i in range(len(beats_train)):
         noise = noise_train[noise_index:noise_index + samples]
-
-        beat_max_value = np.max(s) - np.min(s)
-
+        beat_max_value = np.max(beats_train[i]) - np.min(beats_train[i])
         noise_max_value = np.max(noise) - np.min(noise)
-
         Ase = noise_max_value / beat_max_value
-
-        rnd = np.random.randint(low=20, high=200, size=1) / 100
-
-        alpha = rnd / Ase
-
-        signal_noise = s + alpha * noise
-
+        alpha = rnd_train[i] / Ase
+        signal_noise = beats_train[i] + alpha * noise
         sn_train.append(signal_noise)
-
         noise_index += samples
 
         if noise_index > (len(noise_train) - samples):
             noise_index = 0
 
+    # Adding noise to test
     noise_index = 0
-
-    for s in beats_test:
-
+    rnd_test = np.random.randint(low=20, high=200, size=len(beats_test)) / 100
+    for i in range(len(beats_test)):
         noise = noise_test[noise_index:noise_index + samples]
-
-        beat_max_value = np.max(s) - np.min(s)
-
+        beat_max_value = np.max(beats_test[i]) - np.min(beats_test[i])
         noise_max_value = np.max(noise) - np.min(noise)
-
         Ase = noise_max_value / beat_max_value
-
-        rnd = np.random.randint(low=20, high=200, size=1) / 100
-
-        alpha = rnd / Ase
-
-        signal_noise = s + alpha * noise
+        alpha = rnd_test[i] / Ase
+        signal_noise = beats_test[i] + alpha * noise
         sn_test.append(signal_noise)
-
         noise_index += samples
 
         if noise_index > (len(noise_test) - samples):
@@ -189,7 +178,6 @@ def Data_Preparation():
     X_test = np.array(sn_test)
     y_test = np.array(beats_test)
 
-    # Expand diemsions to meet Keras input shape requirements
     X_train = np.expand_dims(X_train, axis=2)
     y_train = np.expand_dims(y_train, axis=2)
 
