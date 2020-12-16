@@ -33,6 +33,9 @@ if __name__ == "__main__":
                       'Multibranch LANLD'
                       ]
 
+    # Data_Preparation() function assumes that QT database and Noise Stress Test Database are uncompresed
+    # inside a folder called data
+    # TODO: Add an automatic download
     Dataset = dp.Data_Preparation()
 
     # Save dataset
@@ -284,7 +287,6 @@ if __name__ == "__main__":
                PRD_values_DL_exp_3,
                PRD_values_DL_exp_4,
                ]
-
 
     CORR_all = [COS_SIM_values_FIR,
                 COS_SIM_values_IIR,
