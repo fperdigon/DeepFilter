@@ -114,7 +114,7 @@ def prepare(QTpath='data/qt-database-1.0.0/'):
     with open('data/QTDatabase.pkl', 'wb') as output:  # Overwrites any existing file.
         pickle.dump(QTDatabaseSignals, output)
     print('=========================================================')
-    print('MIT QT database saved as npy')
+    print('MIT QT database saved as pickle file')
         
 
      

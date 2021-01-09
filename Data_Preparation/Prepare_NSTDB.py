@@ -36,5 +36,5 @@ def prepare(NSTDBPath='data/mit-bih-noise-stress-test-database-1.0.0/bw'):
     with open('data/NoiseBWL.pkl', 'wb') as output:  # Overwrites any existing file.
         pickle.dump(signals, output)
     print('=========================================================')
-    print('MIT BIH data noise stress test database (NSTDB) saved as npy')
+    print('MIT BIH data noise stress test database (NSTDB) saved as pickle')
 
