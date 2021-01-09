@@ -26,10 +26,10 @@ inspired multibranch model that by laveraging the use og multi path modules and 
 filtering BLW while preserving ECG signal morphology and been computational efficient.  
 
 The following figure shows the multipath module using dilated convolutions. 
-![Multipath module](readme img/fig_filter_layer.png "Multipath module")
+![Multipath module](ReadmeImg/fig_filter_layer.png "Multipath module")
 
 The following figure shows the overall model architecture.
-![Model Architecture](readme img/fig_prop_arch.png "Model Architecture")
+![Model Architecture](ReadmeImg/fig_prop_arch.png "Model Architecture")
 
 In addition, we compared our approach against state-of-the-art methods using traditional filtering procedures as well as deep learning techniques.
 This other methods were implemented by us in python 
@@ -45,15 +45,15 @@ similarity.
 
 The following table present the quantitative results of DeepFilter Net compared on the same test set with other SOTA 
 methods.
-![Results table](readme img/results_table.png "Results table")
+![Results table](ReadmeImg/results_table.png "Results table")
 
 The figure shows a portion of sele0106 ECG signal. (Second) Original ECG + BLW noise from the NSTDB. (Third) The blue 
 line is the ECG filtered using our approach. (Fourth) The brown signal is the ECG recovered using the IIR filter, this 
 image was included for visual comparison purposes. Metric values are also included.
-![Original ECG signal](readme img/fig_sele0106_orig.png "Original ECG signal")
-![Original ECG signal + BLW noise](readme img/fig_sele0106_orig+blw.png "Original ECG signal + BLW noise")
-![ECG filtered using DeepFilter](readme img/fig_sele0106_dl_filter.png "ECG filtered using DeepFilter")
-![ECG filtered using IIR classical filter](readme img/fig_sele0106_iir_filter.png "ECG filtered using IIR classical filter")
+![Original ECG signal](ReadmeImg/fig_sele0106_orig.png "Original ECG signal")
+![Original ECG signal + BLW noise](ReadmeImg/fig_sele0106_orig+blw.png "Original ECG signal + BLW noise")
+![ECG filtered using DeepFilter](ReadmeImg/fig_sele0106_dl_filter.png "ECG filtered using DeepFilter")
+![ECG filtered using IIR classical filter](ReadmeImg/fig_sele0106_iir_filter.png "ECG filtered using IIR classical filter")
 
 
 ## Reproducibility
