@@ -71,16 +71,6 @@ def train_dl(Dataset, experiment):
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'Vanilla_NL'
 
-    if experiment == 'Multibranch L':
-        # Multibranch linear
-        model = models.deep_filter_I_linear()
-        model_label = 'Multibranch_L'
-
-    if experiment == 'Multibranch NL':
-        # Multibranch non linear
-        model = models.deep_filter_I_Nlinear()
-        model_label = 'Multibranch_NL'
-
     if experiment == 'Multibranch LANL':
         # Multibranch linear and non linear
         model = models.deep_filter_I_LANL()
@@ -202,16 +192,6 @@ def test_dl(Dataset, experiment):
         # Vanilla CNN non linear
         model = models.deep_filter_vanilla_Nlinear()
         model_label = 'Vanilla_NL'
-
-    if experiment == 'Multibranch L':
-        # Multibranch linear
-        model = models.deep_filter_I_linear()
-        model_label = 'Multibranch_L'
-
-    if experiment == 'Multibranch NL':
-        # Multibranch non linear
-        model = models.deep_filter_I_Nlinear()
-        model_label = 'Multibranch_NL'
 
     if experiment == 'Multibranch LANL':
         # Multibranch linear and non linear
