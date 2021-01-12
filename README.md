@@ -1,4 +1,6 @@
 # DeepFilter
+For a more theoretical information please visit our paper: [https://arxiv.org/pdf/2101.03423.pdf](https://arxiv.org/pdf/2101.03423.pdf "paper") 
+
 This repository contains the codes for DeepFilter a deep learning based Base line wander removal tool.
 
 This repository also contains other classical and deeplearning filters solutions implemented for comparison purposes.
@@ -131,17 +133,11 @@ When citing DeepFilter please use this BibTeX entry:
     
 TODO: Inset the correct BibTeX once the Arxiv or paper is published  
    
-    @proceeding{doi:10.1117/12.2253901,
-    author = {Vázquez Romaguera, Liset and Romero, Francisco Perdigón and Costa, Marly Guimarães Fernandes and Costa Filho, Cicero Ferreira Fernandes},
-    title = {Left ventricle segmentation in cardiac MRI images using fully convolutional neural networks},
-    journal = {Proc. SPIE},
-    volume = {10134},
-    number = {},
-    pages = {101342Z-101342Z-11},
-    year = {2017},
-    doi = {10.1117/12.2253901},
-    URL = { http://dx.doi.org/10.1117/12.2253901},
-    eprint = {}
+    @article{romero2021deepfilter,
+    title={DeepFilter: an ECG baseline wander removal filter using deep learning techniques},
+    author={Romero, Francisco Perdig{\'o}n and Pi{\~n}ol, David Castro and V{\'a}zquez-Seisdedos, Carlos Rom{\'a}n},
+    journal={arXiv preprint arXiv:2101.03423},
+    year={2021}
     }
     
 ## License
