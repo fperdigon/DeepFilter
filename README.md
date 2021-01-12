@@ -50,8 +50,6 @@ methods.
 ![Results table](ReadmeImg/results_table.png "Results table")
 
 Qualitative results
-(Second)  (Third)  (Fourth) The brown signal is the ECG recovered using the IIR filter, this 
-image was included for visual comparison purposes. Metric values are also included.
 
 The figure shows a portion of sele0106 ECG signal.
 ![Original ECG signal](ReadmeImg/fig_sele0106_orig.png "Original ECG signal")
