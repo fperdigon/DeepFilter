@@ -5,7 +5,7 @@ This repository contains the codes for DeepFilter a deep learning based Base lin
 
 This repository also contains other classical and deeplearning filters solutions implemented for comparison purposes.
 
-The models deep learning models were implemented using Keras/Tensorflow framework.
+The deep learning models were implemented using Keras/Tensorflow framework.
 
 - [Introduction](#introduction)
 - [Results](#results)
