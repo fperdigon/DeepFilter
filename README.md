@@ -49,12 +49,20 @@ The following table present the quantitative results of DeepFilter Net compared 
 methods.
 ![Results table](ReadmeImg/results_table.png "Results table")
 
-The figure shows a portion of sele0106 ECG signal. (Second) Original ECG + BLW noise from the NSTDB. (Third) The blue 
-line is the ECG filtered using our approach. (Fourth) The brown signal is the ECG recovered using the IIR filter, this 
+Qualitative results
+(Second)  (Third)  (Fourth) The brown signal is the ECG recovered using the IIR filter, this 
 image was included for visual comparison purposes. Metric values are also included.
+
+The figure shows a portion of sele0106 ECG signal.
 ![Original ECG signal](ReadmeImg/fig_sele0106_orig.png "Original ECG signal")
+
+Original ECG + BLW noise from the NSTDB.
 ![Original ECG signal + BLW noise](ReadmeImg/fig_sele0106_orig+blw.png "Original ECG signal + BLW noise")
+
+The blue line is the ECG filtered using our approach.Metric values are also included.
 ![ECG filtered using DeepFilter](ReadmeImg/fig_sele0106_dl_filter.png "ECG filtered using DeepFilter")
+
+The brown signal is the ECG recovered using the IIR filter, this image was included for visual comparison purposes. Metric values are also included.
 ![ECG filtered using IIR classical filter](ReadmeImg/fig_sele0106_iir_filter.png "ECG filtered using IIR classical filter")
 
 
