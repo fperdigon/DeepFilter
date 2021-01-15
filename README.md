@@ -136,8 +136,6 @@ training will be done in CPU (slower).
 ## Citing DeepFilter
 
 When citing DeepFilter please use this BibTeX entry:
-    
-TODO: Inset the correct BibTeX once the Arxiv or paper is published  
    
     @article{romero2021deepfilter,
     title={DeepFilter: an ECG baseline wander removal filter using deep learning techniques},
