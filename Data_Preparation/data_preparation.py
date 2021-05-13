@@ -13,7 +13,7 @@ import numpy as np
 import _pickle as pickle
 from Data_Preparation import Prepare_QTDatabase, Prepare_NSTDB
 
-def Data_Preparation():
+def Data_Preparation(noise_version=1):
 
     print('Getting the Data ready ... ')
 
@@ -32,24 +32,34 @@ def Data_Preparation():
 
     # Load NSTDB
     with open('data/NoiseBWL.pkl', 'rb') as input:
-        nstd = pickle.load(input)
+        nstdb = pickle.load(input)
 
     #####################################
     # NSTDB
     #####################################
 
-    noise_channel1 = nstd[:, 0]
-    noise_channel2 = nstd[:, 1]
+    [bw_signals, _ ] = nstdb
+    bw_signals = np.array(bw_signals)
+
+
+    bw_noise_channel1_a = bw_signals[0:int(bw_signals.shape[0]/2), 0]
+    bw_noise_channel1_b = bw_signals[int(bw_signals.shape[0]/2):-1, 0]
+    bw_noise_channel2_a = bw_signals[0:int(bw_signals.shape[0]/2), 1]
+    bw_noise_channel2_b = bw_signals[int(bw_signals.shape[0]/2):-1, 1]
+
 
 
     #####################################
     # Data split
     #####################################
-
-    noise_test = np.concatenate(
-        (noise_channel1[0:int(noise_channel1.shape[0] * 0.13)], noise_channel2[0:int(noise_channel2.shape[0] * 0.13)]))
-    noise_train = np.concatenate((noise_channel1[int(noise_channel1.shape[0] * 0.13):-1],
-                                  noise_channel2[int(noise_channel2.shape[0] * 0.13):-1]))
+    if noise_version == 1:
+        noise_test = bw_noise_channel2_b
+        noise_train = bw_noise_channel1_a
+    elif noise_version == 2:
+        noise_test = bw_noise_channel1_b
+        noise_train = bw_noise_channel2_a
+    else:
+        raise Exception("Sorry, noise_version should be 0 or 1")
 
     #####################################
     # QTDatabase
@@ -158,6 +168,11 @@ def Data_Preparation():
     # Adding noise to test
     noise_index = 0
     rnd_test = np.random.randint(low=20, high=200, size=len(beats_test)) / 100
+
+    # Saving the random array so we can use it on the amplitude segmentation tables
+    np.save('rnd_test.npy', rnd_test)
+    print('rnd_test shape: ' + str(rnd_test.shape))
+
     for i in range(len(beats_test)):
         noise = noise_test[noise_index:noise_index + samples]
         beat_max_value = np.max(beats_test[i]) - np.min(beats_test[i])

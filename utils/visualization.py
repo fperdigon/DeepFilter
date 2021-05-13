@@ -165,8 +165,6 @@ def ecg_view_diff(ecg, ecg_blw, ecg_dl, ecg_f, signal_name=None, beat_no=None):
 
 def generate_table(metrics, metric_values, Exp_names):
     # Print tabular results in the console, in a pretty way
-    print('\n')
-
     tb = PrettyTable()
     ind = 0
 
@@ -195,8 +193,6 @@ def generate_table_time(column_names, all_values, Exp_names, gpu=True):
     # We need circular shift them to the right
     all_values[0] = all_values[0][-2::] + all_values[0][0:-2]
     all_values[1] = all_values[1][-2::] + all_values[1][0:-2]
-
-    print('\n')
 
     tb = PrettyTable()
     ind = 0

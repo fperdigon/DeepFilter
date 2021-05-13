@@ -38,7 +38,7 @@ def mad_loss(y_true, y_pred):
     return K.max(K.square(y_pred - y_true), axis=-2)
 
 
-def train_dl(Dataset, experiment):
+def train_dl(Dataset, experiment, signal_size=512):
 
     print('Deep Learning pipeline: Training the model for exp ' + str(experiment))
 
@@ -53,32 +53,32 @@ def train_dl(Dataset, experiment):
 
     if experiment == 'FCN-DAE':
         # FCN_DAE
-        model = models.FCN_DAE()
+        model = models.FCN_DAE(signal_size=signal_size)
         model_label = 'FCN_DAE'
 
     if experiment == 'DRNN':
         # DRNN
-        model = models.DRRN_denoising()
+        model = models.DRRN_denoising(signal_size=signal_size)
         model_label = 'DRNN'
 
     if experiment == 'Vanilla L':
         # Vanilla CNN linear
-        model = models.deep_filter_vanilla_linear()
+        model = models.deep_filter_vanilla_linear(signal_size=signal_size)
         model_label = 'Vanilla_L'
 
     if experiment == 'Vanilla NL':
         # Vanilla CNN non linear
-        model = models.deep_filter_vanilla_Nlinear()
+        model = models.deep_filter_vanilla_Nlinear(signal_size=signal_size)
         model_label = 'Vanilla_NL'
 
     if experiment == 'Multibranch LANL':
         # Multibranch linear and non linear
-        model = models.deep_filter_I_LANL()
+        model = models.deep_filter_I_LANL(signal_size=signal_size)
         model_label = 'Multibranch_LANL'
 
     if experiment == 'Multibranch LANLD':
         # Inception-like linear and non linear dilated
-        model = models.deep_filter_model_I_LANL_dilated()
+        model = models.deep_filter_model_I_LANL_dilated(signal_size=signal_size)
         model_label = 'Multibranch_LANLD'
 
 
@@ -161,7 +161,7 @@ def train_dl(Dataset, experiment):
 
 
 
-def test_dl(Dataset, experiment):
+def test_dl(Dataset, experiment, signal_size=512):
 
     print('Deep Learning pipeline: Testing the model')
 
@@ -175,32 +175,32 @@ def test_dl(Dataset, experiment):
 
     if experiment == 'FCN-DAE':
         # FCN_DAE
-        model = models.FCN_DAE()
+        model = models.FCN_DAE(signal_size=signal_size)
         model_label = 'FCN_DAE'
 
     if experiment == 'DRNN':
         # DRNN
-        model = models.DRRN_denoising()
+        model = models.DRRN_denoising(signal_size=signal_size)
         model_label = 'DRNN'
 
     if experiment == 'Vanilla L':
         # Vanilla CNN linear
-        model = models.deep_filter_vanilla_linear()
+        model = models.deep_filter_vanilla_linear(signal_size=signal_size)
         model_label = 'Vanilla_L'
 
     if experiment == 'Vanilla NL':
         # Vanilla CNN non linear
-        model = models.deep_filter_vanilla_Nlinear()
+        model = models.deep_filter_vanilla_Nlinear(signal_size=signal_size)
         model_label = 'Vanilla_NL'
 
     if experiment == 'Multibranch LANL':
         # Multibranch linear and non linear
-        model = models.deep_filter_I_LANL()
+        model = models.deep_filter_I_LANL(signal_size=signal_size)
         model_label = 'Multibranch_LANL'
 
     if experiment == 'Multibranch LANLD':
         # Inception-like linear and non linear dilated
-        model = models.deep_filter_model_I_LANL_dilated()
+        model = models.deep_filter_model_I_LANL_dilated(signal_size=signal_size)
         model_label = 'Multibranch_LANLD'
 
     print('\n ' + model_label + '\n ')
