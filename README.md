@@ -1,7 +1,16 @@
 # DeepFilter
-For a more theoretical information please visit our paper: [https://arxiv.org/pdf/2101.03423.pdf](https://arxiv.org/pdf/2101.03423.pdf "paper") 
+For a more theoretical information please visit our paper in the journal **Biomedical Signal and Control**: 
+[https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899](https://www.sciencedirect.com/science/article/abs/pii/S1746809421005899 "paper")  
 
-This repository contains the codes for DeepFilter a deep learning based Base line wander removal tool.
+This repository contains the codes for DeepFilter a deep learning based Base line wander removal tool. 
+This repo follows the last version of the paper where some changes on the experiment scheme were requested
+by the reviewers.
+
+Since for us reproducibility is **KEY** on research, and we understand that some folks will find and read only the 
+Arxiv version, we have decided to create a separate repository 
+[https://github.com/fperdigon/DeepFilter_as_in_Arxiv](https://github.com/fperdigon/DeepFilter_as_in_Arxiv "repo")
+that follows the experiment scheme described in the preprint Arxiv paper 
+[https://arxiv.org/pdf/2101.03423.pdf](https://arxiv.org/pdf/2101.03423.pdf "paper") 
 
 This repository also contains other classical and deeplearning filters solutions implemented for comparison purposes.
 
@@ -65,22 +74,6 @@ The brown signal is the ECG recovered using the IIR filter, this image was inclu
 
 
 ## Reproducibility
-
-For the present work two methods for reproducibility:
-
-### Run DeepFilter on Google Colab
-
-The simplest way to reproduce the published results is by using the Google Colab notebook. The notebook file displays 
-all cells results from a previous run. If you want to run the codes by yourself just go to the Google Colab Menu 
-"Runtime" then click on "Run all" please be aware that this will take approximately 5 hours.
-
-[Deep Filter Google Colab](https://colab.research.google.com/drive/1S1HjkQnrA0EbEDJFr0D-6DAt62RCcP5_?usp=sharing)
-
-The used Google Colab GPU environment will allow GPU acceleration when training the deep learning models.     
-The code will automatically download the data from Pysionet servers and prepare it to be used. Then the different deep 
-learning methods will be train. Finally all the results will be computed using the metrics and printed as a table. Due 
-the randomness proper of this method the results may differ slightly with the published results.
-  
   
 ### Download this git repository and run local
 The firts step is to clone this repository
@@ -139,9 +132,12 @@ When citing DeepFilter please use this BibTeX entry:
    
     @article{romero2021deepfilter,
     title={DeepFilter: an ECG baseline wander removal filter using deep learning techniques},
-    author={Romero, Francisco Perdig{\'o}n and Pi{\~n}ol, David Castro and V{\'a}zquez-Seisdedos, Carlos Rom{\'a}n},
-    journal={arXiv preprint arXiv:2101.03423},
-    year={2021}
+    author={Romero, Francisco P and Pi{\~n}ol, David C and V{\'a}zquez-Seisdedos, Carlos R},
+    journal={Biomedical Signal Processing and Control},
+    volume={70},
+    pages={102992},
+    year={2021},
+    publisher={Elsevier}
     }
     
 ## License
